@@ -543,12 +543,6 @@ enum NotificationType {
   adminReply,
 }
 
-enum UserGender {
-  male,
-  female,
-  other,
-}
-
 void showInSnackBar(String? message,
     {String? title,
     SnackPosition? position,

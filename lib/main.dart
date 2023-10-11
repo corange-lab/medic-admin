@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:medic_admin/controller/auth_controller.dart';
 import 'package:medic_admin/controller/user_controller.dart';
 import 'package:medic_admin/firebase_options.dart';
-import 'package:medic_admin/screen/home_screen.dart';
 import 'package:medic_admin/screen/splash_screen.dart';
 import 'package:medic_admin/theme/colors_theme.dart';
 
@@ -15,8 +14,10 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-  UserController userController = Get.put(UserController());
-  AuthController controller = Get.put(AuthController());
+  final UserController userController = Get.put(UserController());
+  final AuthController controller = Get.put(AuthController());
+
+  MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +36,6 @@ class MyApp extends StatelessWidget {
         transitionDuration: const Duration(milliseconds: 500),
         defaultGlobalState: true,
         themeMode: ThemeMode.light,
-        home: HomeScreen());
+        home: const SplashScreen());
   }
 }

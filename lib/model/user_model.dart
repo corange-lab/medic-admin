@@ -11,6 +11,7 @@ class UserModel {
   final String? mobileNo;
   final String? profilePicture;
   final bool? enablePushNotification;
+  final List<String>? role;
 
   UserModel._({
     this.id,
@@ -21,6 +22,7 @@ class UserModel {
     this.countryCode,
     this.profilePicture,
     this.enablePushNotification,
+    this.role,
   });
 
   UserModel.newUser({
@@ -32,6 +34,7 @@ class UserModel {
     this.countryCode,
     this.profilePicture,
     this.enablePushNotification,
+    this.role,
   });
 
   UserModel copyWith({
@@ -43,6 +46,7 @@ class UserModel {
     String? fcmToken,
     String? profilePicture,
     bool? enablePushNotification,
+    List<String>? role,
   }) {
     return UserModel._(
       id: id ?? this.id,
@@ -53,7 +57,8 @@ class UserModel {
       countryCode: countryCode ?? this.countryCode,
       profilePicture: profilePicture ?? this.profilePicture,
       enablePushNotification:
-      enablePushNotification ?? this.enablePushNotification,
+          enablePushNotification ?? this.enablePushNotification,
+      role: role ?? this.role,
     );
   }
 
@@ -80,6 +85,7 @@ class UserModel {
       mobileNo: map['mobileNo'],
       profilePicture: map['profilePicture'],
       enablePushNotification: map['enablePushNotification'],
+      role: map['role'].cast<String>(),
     );
   }
 
@@ -91,7 +97,7 @@ class UserModel {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is UserModel && runtimeType == other.runtimeType && id == other.id;
+      other is UserModel && runtimeType == other.runtimeType && id == other.id;
 
   @override
   int get hashCode => id.hashCode;
@@ -107,6 +113,7 @@ class UserModel {
       mobileNo: map['mobileNo'],
       profilePicture: map['profilePicture'],
       enablePushNotification: map['enablePushNotification'],
+      role: map['role'],
     );
   }
 }

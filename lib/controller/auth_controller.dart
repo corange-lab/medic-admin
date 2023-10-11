@@ -37,9 +37,7 @@ class AuthController extends GetxController {
   RxBool resendButton = true.obs;
 
   TextEditingController phoneNumberController = TextEditingController();
-  TextEditingController firstNameController = TextEditingController();
-  TextEditingController lastNameController = TextEditingController();
-  Rx<UserGender> selectedGender = UserGender.male.obs;
+
   FocusNode phoneNumberTextField = FocusNode();
 
   AppStorage appStorage = AppStorage();
@@ -50,16 +48,14 @@ class AuthController extends GetxController {
 
   CountryCode? countryData;
 
+  @override
+  void onInit() {
+    super.onInit();
+    countryData = CountryCode.fromCountryCode('SL');
+  }
+
   bool validateData() {
-    if (firstNameController.text.trim().isEmpty) {
-      showInSnackBar("Please enter first name.",
-          title: 'Required!', isSuccess: false);
-      return false;
-    } else if (lastNameController.text.trim().isEmpty) {
-      showInSnackBar("Please enter last name.",
-          title: 'Required!', isSuccess: false);
-      return false;
-    } else if (phoneNumberController.text.trim().isEmpty) {
+    if (phoneNumberController.text.trim().isEmpty) {
       showInSnackBar("Please enter phone number.",
           title: 'Required!', isSuccess: false);
       return false;
@@ -81,7 +77,9 @@ class AuthController extends GetxController {
       return '';
     }
     String mPhoneNumber = phoneNumberController.text.trim();
-    return (countryData!.dialCode! + mPhoneNumber).replaceAll('+', '');
+    String phone = (countryData!.dialCode! + mPhoneNumber).replaceAll('+', '');
+    print('phone $phone');
+    return phone;
   }
 
   Future<void> verifyPhoneNumber({bool second = false}) async {
@@ -90,21 +88,25 @@ class AuthController extends GetxController {
       isOtpSent = true.obs;
       update([continueButtonId]);
       try {
+        print('getPhoneNumber() ${getPhoneNumber()}');
         await _auth.verifyPhoneNumber(
           phoneNumber: '+${getPhoneNumber()}',
           verificationCompleted: (PhoneAuthCredential credential) async {
             isOtpSent = false.obs;
             update([continueButtonId]);
-            _auth.signInWithCredential(credential).then((value) {
-              showInSnackBar(ConstString.successLogin, isSuccess: true);
-              return;
-            });
+            UserCredential userCredential =
+                await _auth.signInWithCredential(credential);
+            if (userCredential.user?.uid != null) {
+              var gotUser = await _createUserInUserCollection(userCredential);
+              await loginToPortal(gotUser);
+            }
+            showInSnackBar(ConstString.successLogin, isSuccess: true);
           },
           verificationFailed: (FirebaseAuthException exception) {
             isOtpSent = false.obs;
             update([continueButtonId]);
 
-            log("Verification error${exception.message}");
+            log("Verification error ${exception.message}");
             isLoading = false;
             update([ControllerIds.verifyButtonKey]);
             authException(exception);
@@ -193,7 +195,7 @@ class AuthController extends GetxController {
     Get.delete<AuthController>();
     Get.put(AuthController(), permanent: true);
     Get.back();
-    await Get.offAll(() =>  LoginScreen());
+    await Get.offAll(() => LoginScreen());
     await FirebaseAuth.instance.signOut();
   }
 
@@ -217,8 +219,11 @@ class AuthController extends GetxController {
         if (user.phoneNumber == null) {
           result = await user.linkWithCredential(phoneAuthCredential);
           log('data to check 1 ${getPhoneNumber()}');
-          var gotUser = await _createUserInUserCollection(result,
-              displayName: getUserName());
+          var gotUser = await _createUserInUserCollection(result);
+          await loginToPortal(gotUser);
+          isLoading = false;
+          update([ControllerIds.verifyButtonKey]);
+          return;
         } else {
           result = await _auth.signInWithCredential(phoneAuthCredential);
           log(ConstString.successLogin);
@@ -234,22 +239,16 @@ class AuthController extends GetxController {
       update([ControllerIds.verifyButtonKey]);
       if (result.additionalUserInfo?.isNewUser ?? false) {
         log('data to check 2 ${getPhoneNumber()}');
-        var gotUser = await _createUserInUserCollection(result,
-            displayName: getUserName());
-        await appStorage.setUserData(gotUser);
-        await NotificationService.instance.getTokenAndUpdateCurrentUser();
-        await Get.offAll(() => HomeScreen());
+        var gotUser = await _createUserInUserCollection(result);
+        await loginToPortal(gotUser);
         isLoading = false;
         update([ControllerIds.verifyButtonKey]);
       } else {
-        var gotUser = await _createUserInUserCollection(result,
-            displayName: getUserName());
+        var gotUser = await _createUserInUserCollection(result);
         isLoading = false;
         update([ControllerIds.verifyButtonKey]);
 
-        await appStorage.setUserData(gotUser);
-        await NotificationService.instance.getTokenAndUpdateCurrentUser();
-        await Get.offAll(() => HomeScreen());
+        await loginToPortal(gotUser);
       }
       isLoading = false;
       update([ControllerIds.verifyButtonKey]);
@@ -265,43 +264,27 @@ class AuthController extends GetxController {
     }
   }
 
-  Future<UserModel> _createUserInUserCollection(
-    UserCredential credentials, {
-    String? displayName,
-  }) async {
-    late UserModel userModel;
+  Future<void> loginToPortal(UserModel? gotUser) async {
+    if (gotUser != null &&
+        gotUser.role != null &&
+        (gotUser.role ?? []).contains('admin')) {
+      await appStorage.setUserData(gotUser);
+      await NotificationService.instance.getTokenAndUpdateCurrentUser();
+      await Get.offAll(() => HomeScreen());
+    } else {
+      showInSnackBar('Only admin can login.', isSuccess: false);
+      return;
+    }
+  }
+
+  Future<UserModel?> _createUserInUserCollection(
+      UserCredential credentials) async {
     bool isUserExist =
         await UserRepository.instance.isUserExist(credentials.user!.uid);
     if (!isUserExist) {
-      List<String> name = getFirstLastName(credentials);
-      String? fcmToken = await _firebaseMessaging.getToken();
-      userModel = UserModel.newUser(
-        id: credentials.user?.uid,
-        name: (displayName ?? ('${name.first} ${name[1]}')),
-        profilePicture: credentials.user?.photoURL,
-        fcmToken: fcmToken,
-        countryCode: int.parse(countryData!.dialCode!.replaceAll('+', '')),
-        mobileNo: phoneNumberController.text.trim().replaceAll('+', ''),
-        enablePushNotification: true,
-        gender: selectedGender.value.name,
-      );
-      await UserRepository.instance.createNewUser(userModel);
+      return null;
     } else {
-      userModel =
-          await UserRepository.instance.fetchUser(credentials.user!.uid);
+      return await UserRepository.instance.fetchUser(credentials.user!.uid);
     }
-    return userModel;
-  }
-
-  String getUserName() {
-    List<String> names = [];
-    // return first and last name with joined string with single space  - firstNameController lastNameController
-    names.add(firstNameController.text.trim());
-    names.add(lastNameController.text.trim());
-    return names.join(" ");
-  }
-
-  List<String> getFirstLastName(UserCredential credentials) {
-    return [firstNameController.text.trim(), lastNameController.text.trim()];
   }
 }
