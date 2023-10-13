@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:medic_admin/controller/medicine_controller.dart';
-import 'package:medic_admin/model/medicine.dart';
+import 'package:medic_admin/model/medicine_data.dart';
 import 'package:medic_admin/theme/colors.dart';
 import 'package:medic_admin/utils/app_font.dart';
 import 'package:medic_admin/utils/string.dart';
@@ -41,7 +41,7 @@ class ViewMedicine extends StatelessWidget {
         }
 
         if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-          List<Medicine> medicine = snapshot.data!;
+          List<MedicineData> medicine = snapshot.data!;
           return ListView.builder(
             itemCount: medicine.length,
             itemBuilder: (context, index) {
@@ -63,7 +63,7 @@ class ViewMedicine extends StatelessWidget {
                         Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            medicine[index].medicineName!,
+                            medicine[index].genericName!,
                             style: Theme.of(context)
                                 .textTheme
                                 .titleMedium!
@@ -86,7 +86,7 @@ class ViewMedicine extends StatelessWidget {
                                   .copyWith(fontFamily: AppFont.fontMedium),
                             ),
                             Text(
-                              medicine[index].price!,
+                              medicine[index].ratings!.toString(),
                               style: Theme.of(context).textTheme.titleMedium,
                             )
                           ],
