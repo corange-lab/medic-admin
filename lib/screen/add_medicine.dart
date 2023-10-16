@@ -469,7 +469,6 @@ class AddMedicine extends StatelessWidget {
     String id = controller.medicineRef.doc().id;
     File pickFile = File(pickController.imgPath.value);
 
-    // if (await pickFile.exists()) {
     try {
       String imageUrl = await uploadImage(pickFile, 'medicine_img/$id');
 
@@ -494,11 +493,10 @@ class AddMedicine extends StatelessWidget {
       showInSnackBar("Error adding medicine: $e",
           title: 'Error', isSuccess: false);
     }
-    // }
   }
 
   Future<String> uploadImage(File file, String path) async {
-    Reference ref = FirebaseStorage.instance.ref(path);
+    Reference ref = FirebaseStorage.instance.ref().child(path);
     UploadTask uploadTask = ref.putFile(file);
     await uploadTask.whenComplete(() => null); // Wait for upload completion
     return await ref.getDownloadURL(); // Get and return URL

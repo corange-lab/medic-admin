@@ -38,9 +38,9 @@ dependencies:
   get:
   flutter_svg: ^2.0.7
   country_code_picker: ^3.0.0
-  image_picker: ^1.0.4
-  image_cropper: ^5.0.0
-  image_cropper_for_web: ^3.0.0
+  image_picker: any
+  image_picker_web: any
+  mime: any
   cloud_firestore: ^4.9.3
   firebase_auth: ^4.10.1
   firebase_messaging: ^14.6.9
