@@ -36,59 +36,55 @@ class AddMedicine extends StatelessWidget {
                       borderRadius: BorderRadius.circular(40))),
               child: Text("Add Medicine Data")),
         ),
-        body: Obx(() => Scrollbar(scrollbarOrientation: ScrollbarOrientation.bottom,
-          trackVisibility: true,
-          thumbVisibility: true,
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: DataTable(clipBehavior: Clip.antiAliasWithSaveLayer,
-                columnSpacing: 15,
-                headingRowColor:
-                    MaterialStateProperty.all(AppColors.tilePrimaryColor),
-                columns: const [
-                  DataColumn(label: Text('id')),
-                  DataColumn(label: Text('about')),
-                  DataColumn(label: Text('brandName')),
-                  DataColumn(label: Text('categoryId')),
-                  DataColumn(label: Text('drugDrugInteractions')),
-                  DataColumn(label: Text('image')),
-                  DataColumn(label: Text('placeholderImage')),
-                  DataColumn(label: Text('ratings')),
-                  DataColumn(label: Text('genericName')),
-                  DataColumn(label: Text('description')),
-                  DataColumn(label: Text('benefits')),
-                  DataColumn(label: Text('uses')),
-                  DataColumn(label: Text('directionForUse')),
-                  DataColumn(label: Text('safetyInformation')),
-                ],
-                rows: controller.mediDataList.map((medicineData) {
-                  return DataRow(cells: [
-                    DataCell(Text(
-                      medicineData.id ?? "Id",
-                      style: TextStyle(color: AppColors.darkPrimaryColor),
-                    )),
-                    DataCell(Text(medicineData.about ?? "About")),
-                    DataCell(Text(medicineData.brandName ?? "Brand")),
-                    DataCell(Text(medicineData.categoryId ?? "CategoryId")),
-                    DataCell(Text(medicineData.drugDrugInteractions ??
-                        "DrugInteraction")),
-                    DataCell(Text(medicineData.image ?? "Image")),
-                    DataCell(Text(
-                        medicineData.placeholderImage ?? "Placeholder")),
-                    DataCell(Text(medicineData.ratings ?? "Ratings")),
-                    DataCell(
-                        Text(medicineData.genericName ?? "GenericName")),
-                    DataCell(
-                        Text(medicineData.description ?? "Description")),
-                    DataCell(Text(medicineData.benefits ?? "Benefits")),
-                    DataCell(Text(medicineData.uses ?? "Uses")),
-                    DataCell(
-                        Text(medicineData.directionForUse ?? "Direction")),
-                    DataCell(
-                        Text(medicineData.safetyInformation ?? "Safety")),
-                  ]);
-                }).toList()),
-          ),
+        body: Obx(() => SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: DataTable(clipBehavior: Clip.antiAliasWithSaveLayer,
+              columnSpacing: 15,
+              headingRowColor:
+                  MaterialStateProperty.all(AppColors.tilePrimaryColor),
+              columns: const [
+                DataColumn(label: Text('id')),
+                DataColumn(label: Text('about')),
+                DataColumn(label: Text('brandName')),
+                DataColumn(label: Text('categoryId')),
+                DataColumn(label: Text('drugDrugInteractions')),
+                DataColumn(label: Text('image')),
+                DataColumn(label: Text('placeholderImage')),
+                DataColumn(label: Text('ratings')),
+                DataColumn(label: Text('genericName')),
+                DataColumn(label: Text('description')),
+                DataColumn(label: Text('benefits')),
+                DataColumn(label: Text('uses')),
+                DataColumn(label: Text('directionForUse')),
+                DataColumn(label: Text('safetyInformation')),
+              ],
+              rows: controller.mediDataList.map((medicineData) {
+                return DataRow(cells: [
+                  DataCell(Text(
+                    medicineData.id ?? "Id",
+                    style: TextStyle(color: AppColors.darkPrimaryColor),
+                  )),
+                  DataCell(Text(medicineData.about ?? "About")),
+                  DataCell(Text(medicineData.brandName ?? "Brand")),
+                  DataCell(Text(medicineData.categoryId ?? "CategoryId")),
+                  DataCell(Text(medicineData.drugDrugInteractions ??
+                      "DrugInteraction")),
+                  DataCell(Text(medicineData.image ?? "Image")),
+                  DataCell(Text(
+                      medicineData.placeholderImage ?? "Placeholder")),
+                  DataCell(Text(medicineData.ratings ?? "Ratings")),
+                  DataCell(
+                      Text(medicineData.genericName ?? "GenericName")),
+                  DataCell(
+                      Text(medicineData.description ?? "Description")),
+                  DataCell(Text(medicineData.benefits ?? "Benefits")),
+                  DataCell(Text(medicineData.uses ?? "Uses")),
+                  DataCell(
+                      Text(medicineData.directionForUse ?? "Direction")),
+                  DataCell(
+                      Text(medicineData.safetyInformation ?? "Safety")),
+                ]);
+              }).toList()),
         )));
   }
 }
