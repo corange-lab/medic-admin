@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:excel/excel.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -22,12 +25,12 @@ class MedicineController extends GetxController {
       FirebaseFirestore.instance.collection('medicines');
 
   RxList<MedicineData> mediDataList = RxList<MedicineData>();
+  RxList<String> columnHeader = RxList<String>();
 
   @override
   Future<void> onInit() async {
     // TODO: implement onInit
     super.onInit();
-    mediDataList.value = await importMedicineData();
   }
 
   bool validateData() {
@@ -86,19 +89,39 @@ class MedicineController extends GetxController {
     }
   }
 
-  Future<List<MedicineData>> importMedicineData() async {
+  Future<Uint8List?> pickFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['xls','xlsx']
+    );
+
+    if(result != null){
+      return result.files.single.bytes;
+    }else{
+      return null;
+    }
+
+  }
+
+  importMedicineData() async {
     List<MedicineData> medicineDataList = [];
 
-    // Load the Excel file from the assets
-    ByteData data = await rootBundle.load("asset/medicineExcel.xlsx");
-    var bytes = data.buffer.asUint8List();
+    Uint8List? bytes = await pickFile();
+
+    if(bytes == null){
+      return [];
+    }
+
+    // ByteData data = await rootBundle.load("asset/medicineExcel.xlsx");
+    // var bytes = excelFile.readAsBytesSync();
     var excel = Excel.decodeBytes(bytes);
 
     for (var table in excel.tables.keys) {
-      bool skipHeader = true;
+      bool isHeaderRow = true;
       for (var row in excel.tables[table]!.rows) {
-        if (skipHeader) {
-          skipHeader = false;
+        if (isHeaderRow) {
+          columnHeader.value = row.map((cell) => cell?.value?.toString() ?? '').toList();
+          isHeaderRow = false;
           continue;
         }
         medicineDataList.add(MedicineData(
@@ -119,6 +142,6 @@ class MedicineController extends GetxController {
         ));
       }
     }
-    return medicineDataList;
+    mediDataList.value =  medicineDataList;
   }
 }
