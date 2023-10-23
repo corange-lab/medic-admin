@@ -9,6 +9,8 @@ import 'package:medic_admin/utils/string.dart';
 class ViewMedicine extends StatelessWidget {
   MedicineController controller = Get.put(MedicineController());
 
+  ViewMedicine({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,7 +59,7 @@ class ViewMedicine extends StatelessWidget {
                     padding: const EdgeInsets.all(10.0),
                     child: Column(
                       children: [
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         Align(
@@ -73,25 +75,165 @@ class ViewMedicine extends StatelessWidget {
                                     color: AppColors.primaryColor),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         Row(
                           children: [
                             Text(
-                              "${ConstString.mediPrice} : ",
+                              "${ConstString.mediBrand} : ",
                               style: Theme.of(context)
                                   .textTheme
                                   .titleMedium!
                                   .copyWith(fontFamily: AppFont.fontMedium),
                             ),
                             Text(
-                              medicine[index].ratings!.toString(),
+                              medicine[index].brandName ?? "",
                               style: Theme.of(context).textTheme.titleMedium,
                             )
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              "${ConstString.mediAbout} : ",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium!
+                                  .copyWith(fontFamily: AppFont.fontMedium),
+                            ),
+                            Expanded(
+                              child: Text(
+                                medicine[index].about ?? "",
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                            )
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              "${ConstString.mediBeni} : ",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium!
+                                  .copyWith(fontFamily: AppFont.fontMedium),
+                            ),
+                            Expanded(
+                              child: Text(
+                                medicine[index].benefits ?? "",
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                            )
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              "${ConstString.direction} : ",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium!
+                                  .copyWith(fontFamily: AppFont.fontMedium),
+                            ),
+                            Expanded(
+                              child: Text(
+                                medicine[index].directionForUse ?? "",
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                            )
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              "${ConstString.mediDrug} : ",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium!
+                                  .copyWith(fontFamily: AppFont.fontMedium),
+                            ),
+                            Expanded(
+                              child: Text(
+                                medicine[index].drugDrugInteractions ?? "",
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                            )
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              "${ConstString.mediUses} : ",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium!
+                                  .copyWith(fontFamily: AppFont.fontMedium),
+                            ),
+                            Expanded(
+                              child: Text(
+                                medicine[index].uses ?? "",
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                            )
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              "${ConstString.mediSafety} : ",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium!
+                                  .copyWith(fontFamily: AppFont.fontMedium),
+                            ),
+                            Expanded(
+                              child: Text(
+                                medicine[index].safetyInformation ?? "",
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                            )
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              "${ConstString.mediReview} : ",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium!
+                                  .copyWith(fontFamily: AppFont.fontMedium),
+                            ),
+                            Expanded(
+                              child: Text(
+                                medicine[index].ratings.toString(),
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                            )
+                          ],
+                        ),
+                        const SizedBox(
                           height: 10,
                         ),
                         Row(
@@ -103,13 +245,15 @@ class ViewMedicine extends StatelessWidget {
                                   .titleMedium!
                                   .copyWith(fontFamily: AppFont.fontMedium),
                             ),
-                            Text(
-                              medicine[index].description!,
-                              style: Theme.of(context).textTheme.titleMedium,
+                            Expanded(
+                              child: Text(
+                                medicine[index].description ?? "",
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
                             )
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                       ],

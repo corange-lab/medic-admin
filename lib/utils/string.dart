@@ -85,6 +85,7 @@ class ConstString {
   static const String medicine = "Medicines";
   static const String disMedicineName = "Generic Name";
   static const String mediPrice = "Medicine Price";
+  static const String mediReview = "Medicine Review";
   static const String mediDescription = "Medicine Description";
   static const String mediBrand = "Medicine Brand Name";
   static const String mediBeni = "Medicine Benefits";
