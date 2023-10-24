@@ -10,7 +10,7 @@ class UserRepository {
   static UserRepository get instance => _singleton;
 
   final CollectionReference _usersCollection =
-  FirebaseFirestore.instance.collection('users');
+      FirebaseFirestore.instance.collection('users');
 
   String currentUser = FirebaseAuth.instance.currentUser!.uid;
 
@@ -50,7 +50,7 @@ class UserRepository {
 
   Future<UserModel?> getUserByPhone(String phone) async {
     final querySnapshot =
-    await _usersCollection.where('mobileNo', isEqualTo: phone).get();
+        await _usersCollection.where('mobileNo', isEqualTo: phone).get();
     if (querySnapshot.docs.isNotEmpty) {
       return UserModel.fromMap(
           querySnapshot.docs.first.data() as Map<String, dynamic>);
@@ -60,7 +60,7 @@ class UserRepository {
 
   Future<List<UserModel>?> getUsersByIds(List<String?> userIds) async {
     final querySnapshot =
-    await _usersCollection.where('id', whereIn: userIds).get();
+        await _usersCollection.where('id', whereIn: userIds).get();
     if (querySnapshot.docs.isNotEmpty) {
       return querySnapshot.docs
           .map((e) => UserModel.fromMap(e.data() as Map<String, dynamic>))
@@ -97,7 +97,7 @@ class UserRepository {
     return _usersCollection.snapshots().map((querySnapshot) {
       return querySnapshot.docs
           .map((documentSnapshot) => UserModel.fromMap(
-          documentSnapshot.data()! as Map<String, dynamic>))
+              documentSnapshot.data()! as Map<String, dynamic>))
           .toList();
     });
   }
