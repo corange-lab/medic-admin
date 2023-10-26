@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:medic_admin/controller/prescription_controller.dart';
 import 'package:medic_admin/model/prescription_model.dart';
 import 'package:medic_admin/theme/colors.dart';
@@ -32,10 +32,15 @@ class PrescriptionScreen extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
-              child: CupertinoActivityIndicator(
-                color: AppColors.primaryColor,
+                child: SizedBox(
+              height: 35,
+              width: 35,
+              child: LoadingIndicator(
+                colors: [AppColors.primaryColor],
+                indicatorType: Indicator.ballScale,
+                strokeWidth: 1,
               ),
-            );
+            ));
           } else if (snapshot.hasError) {
             return Center(
               child: Text(
@@ -109,12 +114,16 @@ class PrescriptionScreen extends StatelessWidget {
                                                 SizedBox(
                                           width: 120,
                                           child: Center(
-                                            child: CupertinoActivityIndicator(
-                                              color: AppColors.primaryColor,
-                                              animating: true,
-                                              radius: 14,
+                                              child: SizedBox(
+                                            height: 35,
+                                            width: 35,
+                                            child: LoadingIndicator(
+                                              colors: [AppColors.primaryColor],
+                                              indicatorType:
+                                                  Indicator.ballScale,
+                                              strokeWidth: 1,
                                             ),
-                                          ),
+                                          )),
                                         ),
                                         fit: BoxFit.cover,
                                       ),

@@ -1,12 +1,10 @@
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:medic_admin/controller/auth_controller.dart';
 import 'package:medic_admin/theme/colors.dart';
 import 'package:medic_admin/utils/app_font.dart';
 import 'package:medic_admin/utils/string.dart';
-
 
 Future logoutDialogue(BuildContext context, AuthController authController) {
   return showDialog(
@@ -24,9 +22,9 @@ Future logoutDialogue(BuildContext context, AuthController authController) {
             Text(
               ConstString.logoutDialogue,
               style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                color: AppColors.darkPrimaryColor,
-                fontFamily: AppFont.fontBold,
-              ),
+                    color: AppColors.darkPrimaryColor,
+                    fontFamily: AppFont.fontBold,
+                  ),
             ),
             const SizedBox(height: 12),
             Padding(
@@ -58,9 +56,9 @@ Future logoutDialogue(BuildContext context, AuthController authController) {
                       child: Text(
                         ConstString.cancle,
                         style:
-                        Theme.of(context).textTheme.displayMedium!.copyWith(
-                          color: AppColors.txtGrey,
-                        ),
+                            Theme.of(context).textTheme.displayMedium!.copyWith(
+                                  color: AppColors.txtGrey,
+                                ),
                       )),
                 ),
                 const SizedBox(
@@ -81,9 +79,9 @@ Future logoutDialogue(BuildContext context, AuthController authController) {
                       child: Text(
                         ConstString.logoutDialogue,
                         style:
-                        Theme.of(context).textTheme.displayMedium!.copyWith(
-                          color: Colors.white,
-                        ),
+                            Theme.of(context).textTheme.displayMedium!.copyWith(
+                                  color: Colors.white,
+                                ),
                       )),
                 ),
               ],
@@ -122,11 +120,15 @@ Future showProgressDialogue(BuildContext context) {
             child: SizedBox(
               height: 35,
               width: 35,
-              child: CupertinoActivityIndicator(
+              child: LoadingIndicator(
+                colors: [AppColors.primaryColor],
+                indicatorType: Indicator.ballScale,
+                strokeWidth: 1,
+              ), /*CupertinoActivityIndicator(
                 radius: 15,
                 animating: true,
                 color: AppColors.primaryColor,
-              ),
+              ),*/
             ),
           ),
         ],

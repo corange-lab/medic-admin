@@ -135,7 +135,7 @@ class ConstString {
   static const String uploadphoto =
       "Upload the photo and we will deliver \nthe medicines";
   static const String successLogin = 'You are logged-in successfully';
-  static const String otpSent = 'OTP is sent to your emali';
+  static const String otpSent = 'OTP is sent to your mobile';
   static const String enterOtp = "OTP is Required!";
   static const String enterOtpMessage = "Please enter OTP";
 
