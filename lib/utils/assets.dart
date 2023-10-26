@@ -5,4 +5,5 @@ class AppImages {
 
 class AppIcons {
   static const String homeIcon = 'asset/icons/home.svg';
+  static const String arrowDown = 'asset/icons/arrowdownMedic.svg';
 }

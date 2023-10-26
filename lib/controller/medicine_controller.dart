@@ -6,6 +6,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:medic_admin/model/category_data.dart';
 import 'package:medic_admin/model/medicine_data.dart';
 import 'package:medic_admin/utils/utils.dart';
 
@@ -23,8 +24,11 @@ class MedicineController extends GetxController {
 
   final CollectionReference medicineRef =
       FirebaseFirestore.instance.collection('medicines');
+  final CollectionReference categoryRef =
+      FirebaseFirestore.instance.collection('categories');
 
   RxList<MedicineData> mediDataList = RxList<MedicineData>();
+  RxList<CategoryData> categoryData = RxList<CategoryData>();
   RxList<String> columnHeader = RxList<String>();
 
   @override
@@ -42,7 +46,7 @@ class MedicineController extends GetxController {
       showInSnackBar("Please enter brand name.",
           title: 'Required!', isSuccess: false);
       return false;
-    }else if (descriptionController.text.trim().isEmpty) {
+    } else if (descriptionController.text.trim().isEmpty) {
       showInSnackBar("Please enter medicine description.",
           title: 'Required!', isSuccess: false);
       return false;
@@ -59,8 +63,7 @@ class MedicineController extends GetxController {
     return data;
   }
 
-
-  Future<void> addDataToFirestore() async {
+  Future<void> addMedicineDataToFirestore() async {
     int dataAddCount = 0;
     for (MedicineData medicineData in mediDataList) {
       try {
@@ -89,18 +92,44 @@ class MedicineController extends GetxController {
     }
   }
 
-  Future<Uint8List?> pickFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['xls','xlsx']
-    );
+  Future<void> addCategoryDataToFirestore() async {
+    int dataAddCount = 0;
+    for (CategoryData category in categoryData) {
+      try {
+        DocumentReference docRef = await medicineRef.add(category.toMap());
 
-    if(result != null){
-      return result.files.single.bytes;
-    }else{
-      return null;
+        String newId = docRef.id;
+        category.id = newId;
+
+        await docRef.update({'id': newId});
+
+        dataAddCount++;
+      } catch (e) {
+        showInSnackBar("Data Added Error : $e",
+            isSuccess: false, title: "The Medic");
+      }
     }
 
+    if (dataAddCount == categoryData.length) {
+      showInSnackBar("Data Added Succssfully",
+          title: "The Medic", isSuccess: true);
+    } else {
+      showInSnackBar(
+          '$dataAddCount out of ${categoryData.length} category added successfully.',
+          isSuccess: true,
+          title: "The Medic");
+    }
+  }
+
+  Future<Uint8List?> pickFile() async {
+    FilePickerResult? result = await FilePicker.platform
+        .pickFiles(type: FileType.custom, allowedExtensions: ['xls', 'xlsx','ods']);
+
+    if (result != null) {
+      return result.files.single.bytes;
+    } else {
+      return null;
+    }
   }
 
   importMedicineData() async {
@@ -108,7 +137,7 @@ class MedicineController extends GetxController {
 
     Uint8List? bytes = await pickFile();
 
-    if(bytes == null){
+    if (bytes == null) {
       return [];
     }
 
@@ -120,7 +149,8 @@ class MedicineController extends GetxController {
       bool isHeaderRow = true;
       for (var row in excel.tables[table]!.rows) {
         if (isHeaderRow) {
-          columnHeader.value = row.map((cell) => cell?.value?.toString() ?? '').toList();
+          columnHeader.value =
+              row.map((cell) => cell?.value?.toString() ?? '').toList();
           isHeaderRow = false;
           continue;
         }
@@ -142,6 +172,38 @@ class MedicineController extends GetxController {
         ));
       }
     }
-    mediDataList.value =  medicineDataList;
+    mediDataList.value = medicineDataList;
+  }
+
+  importCategoryData() async {
+    List<CategoryData> categoryDataList = [];
+
+    Uint8List? bytes = await pickFile();
+
+    if (bytes == null) {
+      return [];
+    }
+
+    // ByteData data = await rootBundle.load("asset/medicineExcel.xlsx");
+    // var bytes = excelFile.readAsBytesSync();
+    var excel = Excel.decodeBytes(bytes);
+
+    for (var table in excel.tables.keys) {
+      bool isHeaderRow = true;
+      for (var row in excel.tables[table]!.rows) {
+        if (isHeaderRow) {
+          columnHeader.value =
+              row.map((cell) => cell?.value?.toString() ?? '').toList();
+          isHeaderRow = false;
+          continue;
+        }
+        categoryDataList.add(CategoryData(
+            id: row[0]?.value?.toString(),
+            name: row[1]?.value?.toString(),
+            image: row[2]?.value?.toString(),
+            sortNo: row[3]?.value));
+      }
+    }
+    categoryData.value = categoryDataList;
   }
 }

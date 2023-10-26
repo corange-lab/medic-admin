@@ -16,7 +16,10 @@ class LoginScreen extends GetWidget<AuthController> {
         backgroundColor: AppColors.white,
         appBar: AppBar(
           backgroundColor: AppColors.primaryColor,
-          title: const Text("Login User"),
+          title:  Text("Login User",style:  Theme.of(context).textTheme.titleMedium!.copyWith(
+              color: Colors.white,
+              fontSize: 16,
+              fontFamily: AppFont.fontMedium),),
           centerTitle: true,
         ),
         body: SafeArea(

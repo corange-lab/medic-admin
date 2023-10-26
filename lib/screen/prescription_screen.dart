@@ -20,11 +20,11 @@ class PrescriptionScreen extends StatelessWidget {
         centerTitle: true,
         backgroundColor: AppColors.primaryColor,
         title: Text(
-          "Prescription Screen",
-          style: Theme.of(context)
-              .textTheme
-              .titleMedium!
-              .copyWith(color: Colors.white),
+          "Prescriptions",
+          style: Theme.of(context).textTheme.titleMedium!.copyWith(
+              color: Colors.white,
+              fontSize: 16,
+              fontFamily: AppFont.fontMedium),
         ),
       ),
       body: StreamBuilder(

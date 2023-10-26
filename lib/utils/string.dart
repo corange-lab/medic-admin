@@ -2,6 +2,8 @@ class ConstString {
   static const String next = "Next";
   static const String btnContinue = "Continue";
   static const String sendOTP = "Send OTP";
+  static const String addDiscount = "Add Discount";
+  static const String editDiscount = "Edit Discount";
   static const String save = "Save";
   static const String resendOTP = "Resend OTP";
   static const String saveDetails = "Save details";
@@ -80,7 +82,9 @@ class ConstString {
   static const String viewAll = "View all";
   static const String popularMedicine = "Popular Medicines";
   static const String orderPlacement = "Order Placement";
+  static const String addCategory = "Add Category";
   static const String addMedicine = "Add Medicines";
+  static const String viewCategory = "View Category";
   static const String viewMedicine = "View Medicines";
   static const String medicine = "Medicines";
   static const String disMedicineName = "Generic Name";
@@ -138,6 +142,17 @@ class ConstString {
   static const String otpSent = 'OTP is sent to your mobile';
   static const String enterOtp = "OTP is Required!";
   static const String enterOtpMessage = "Please enter OTP";
+
+  static const String discountName = "Discount Name : ";
+  static const String discountPrice = "Discount Price : ";
+  static const String discountPercentage = "Discount Percentage : ";
+  static const String discountType = "Discount Type : ";
+  static const String discountCode = "Discount Code : ";
+  static const String enterDiscountName = "Enter Discount Name";
+  static const String enterDiscountPrice = "Enter Discount Price";
+  static const String enterDiscountPer = "Enter Discount Percentage";
+  static const String enterDiscountType = "Enter Discount Type";
+  static const String enterDiscountCode = "Enter Discount Code";
 
   static String somethingWentWrong = "Something went wrong";
   static const String ERROR_WHILE_UPLODING_PICTURE =

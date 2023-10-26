@@ -5,8 +5,10 @@ import 'package:medic_admin/theme/colors.dart';
 import 'package:medic_admin/utils/app_font.dart';
 import 'package:medic_admin/utils/string.dart';
 
-class AddMedicine extends StatelessWidget {
+class AddCategory extends StatelessWidget {
   MedicineController controller = Get.put(MedicineController());
+
+  AddCategory({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +16,7 @@ class AddMedicine extends StatelessWidget {
         backgroundColor: AppColors.white,
         appBar: AppBar(
           title: Text(
-            ConstString.addMedicine,
+            ConstString.addCategory,
             style: Theme.of(context)
                 .textTheme
                 .titleLarge!
@@ -25,7 +27,7 @@ class AddMedicine extends StatelessWidget {
           actions: [
             IconButton(
                 onPressed: () {
-                  controller.addMedicineDataToFirestore();
+                  controller.addCategoryDataToFirestore();
                 },
                 icon: Icon(
                   Icons.import_export,
@@ -38,7 +40,7 @@ class AddMedicine extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           child: ElevatedButton(
               onPressed: () {
-                controller.importMedicineData();
+                controller.importCategoryData();
               },
               style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primaryColor,
@@ -49,7 +51,7 @@ class AddMedicine extends StatelessWidget {
         ),
         body: Obx(
           () {
-            if (controller.mediDataList.isEmpty) {
+            if (controller.categoryData.isEmpty) {
               return Center(
                   child: Text(
                 "No data available. Please pick a file to load the data.",
@@ -85,13 +87,12 @@ class AddMedicine extends StatelessWidget {
                                 fontSize: 16),
                           )))
                       .toList(),
-                  rows: controller.mediDataList.map((medicineData) {
-                    Map<String, dynamic> rowMap = medicineData.toMap();
+                  rows: controller.categoryData.map((categoryData) {
+                    Map<String, dynamic> rowMap = categoryData.toMap();
                     return DataRow(
                         cells: controller.columnHeader.map((header) {
                       return DataCell(Text(
                         rowMap[header]?.toString() ?? "N/A",
-                        // Convert value to string using toString()
                         style: TextStyle(
                             color: AppColors.darkPrimaryColor,
                             fontFamily: AppFont.fontMedium),
@@ -105,4 +106,3 @@ class AddMedicine extends StatelessWidget {
         ));
   }
 }
-

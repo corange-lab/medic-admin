@@ -18,10 +18,10 @@ class ViewMedicine extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           ConstString.viewMedicine,
-          style: Theme.of(context)
-              .textTheme
-              .titleLarge!
-              .copyWith(color: AppColors.white),
+          style:  Theme.of(context).textTheme.titleMedium!.copyWith(
+              color: Colors.white,
+              fontSize: 16,
+              fontFamily: AppFont.fontMedium),
         ),
         backgroundColor: AppColors.primaryColor,
         centerTitle: true,
