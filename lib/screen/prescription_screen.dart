@@ -1,11 +1,18 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:medic_admin/controller/prescription_controller.dart';
+import 'package:medic_admin/model/medicine_data.dart';
 import 'package:medic_admin/model/prescription_model.dart';
 import 'package:medic_admin/theme/colors.dart';
 import 'package:medic_admin/utils/app_font.dart';
+import 'package:medic_admin/utils/assets.dart';
+import 'package:medic_admin/widgets/app_dialogue.dart';
 
 class PrescriptionScreen extends StatelessWidget {
   PrescriptionController controller = Get.put(PrescriptionController());
@@ -135,6 +142,36 @@ class PrescriptionScreen extends StatelessWidget {
                             const SizedBox(
                               height: 15,
                             ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                  "Medicine : ${prescriptionList[index].medicineId?[0]}"),
+                            ),
+                            const SizedBox(
+                              height: 15,
+                            ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: ElevatedButton(
+                                  onPressed: () async {
+                                    showModelSheet(context, prescriptionList,
+                                        index, prescriptionList[index].userId!);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppColors.primaryColor,
+                                      fixedSize: const Size(150, 40),
+                                      elevation: 0,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(30))),
+                                  child: const Text("Select Medicines")),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            const SizedBox(
+                              height: 15,
+                            ),
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 10),
@@ -198,6 +235,162 @@ class PrescriptionScreen extends StatelessWidget {
           }
         },
       ),
+    );
+  }
+
+  void showModelSheet(
+      BuildContext context, List precriptionList, int index, String docId) {
+    showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      context: context,
+      builder: (context) {
+        return Container(
+          decoration: BoxDecoration(
+              color: AppColors.white,
+              borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Obx(
+                    () => Align(
+                        alignment: Alignment.centerLeft,
+                        child: Row(
+                          children: [
+                            Text(
+                              "Select Medicines : ",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(fontSize: 20),
+                            ),
+                            Expanded(
+                              child: Text(
+                                "${controller.selectMedicineList}",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium!
+                                    .copyWith(
+                                        fontSize: 20,
+                                        color: AppColors.primaryColor,
+                                        fontFamily: AppFont.fontMedium),
+                              ),
+                            )
+                          ],
+                        )),
+                  ),
+                  SizedBox(
+                    height: 40,
+                  ),
+                  SizedBox(
+                    height: 50,
+                    width: double.infinity,
+                    child: StreamBuilder(
+                      stream: controller.fetchMedicine(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return CupertinoActivityIndicator(
+                            color: AppColors.primaryColor,
+                          );
+                        } else if (snapshot.hasData) {
+                          List<MedicineData> medicineList = snapshot.data!;
+
+                          List<String> medicineNameList = [];
+
+                          for (var medicine in medicineList) {
+                            medicineNameList.add(medicine.genericName!);
+                          }
+
+                          return Obx(
+                            () => Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                  border: Border.all(
+                                      color: AppColors.lineGrey, width: 2)),
+                              child: DropdownButton(
+                                itemHeight: kMinInteractiveDimension,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 15, vertical: 5),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall!
+                                    .copyWith(fontSize: 13),
+                                hint: Text(
+                                  "Select Medicine",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleSmall!
+                                      .copyWith(
+                                          fontSize: 14,
+                                          color: AppColors.txtGrey),
+                                ),
+                                icon: Padding(
+                                  padding: const EdgeInsets.only(left: 130),
+                                  child: SvgPicture.asset(AppIcons.arrowDown),
+                                ),
+                                underline: const SizedBox(),
+                                borderRadius: BorderRadius.circular(10),
+                                onChanged: (value) {
+                                  controller.selectedMedicine.value = value!;
+
+                                  controller.selectMedicineList.add(value);
+                                },
+                                items: medicineNameList.isNotEmpty
+                                    ? medicineNameList.map((String items) {
+                                        return DropdownMenuItem(
+                                          value: items,
+                                          child: Text(
+                                            items,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium!
+                                                .copyWith(fontSize: 13),
+                                          ),
+                                        );
+                                      }).toList()
+                                    : null,
+                                value: medicineNameList.contains(
+                                        controller.selectedMedicine.value)
+                                    ? controller.selectedMedicine.value
+                                    : null, // Handle a value not in list scenario
+                              ),
+                            ),
+                          );
+                        } else {
+                          return const SizedBox();
+                        }
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    height: 100,
+                  ),
+                  ElevatedButton(
+                      onPressed: () async {
+                        showProgressDialogue(context);
+                        controller.addMedicineToPrescriptionItem(
+                            docId, index, controller.selectMedicineList);
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primaryColor,
+                          fixedSize: const Size(300, 40),
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30))),
+                      child: const Text("Submit")),
+                  SizedBox(
+                    height: 50,
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

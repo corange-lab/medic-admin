@@ -1,30 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:medic_admin/model/medicine_data.dart';
 import 'package:medic_admin/model/prescription_model.dart';
 import 'package:medic_admin/utils/utils.dart';
 
 class PrescriptionController extends GetxController {
   final CollectionReference presRef =
       FirebaseFirestore.instance.collection('prescriptions');
+  final CollectionReference mediRef =
+      FirebaseFirestore.instance.collection('medicines');
 
-  //import 'package:cloud_firestore/cloud_firestore.dart';
-  //
-  // Stream<List<PrescriptionData>> streamAllPrescriptions() {
-  //   // Reference to the prescription collection
-  //   CollectionReference prescriptionRef = FirebaseFirestore.instance.collection('prescription');
-  //
-  //   // Return a stream of List<PrescriptionData>
-  //   return prescriptionRef.snapshots().map((snapshot) {
-  //     List<PrescriptionData> prescriptionsList = [];
-  //     for (QueryDocumentSnapshot userDoc in snapshot.docs) {
-  //       if (userDoc.data().containsKey('prescriptions')) { // Check if the 'prescriptions' key exists
-  //         List<Map<String, dynamic>> prescriptionsMapList = List<Map<String, dynamic>>.from(userDoc['prescriptions']);
-  //         prescriptionsList.addAll(prescriptionsMapList.map((prescriptionMap) => PrescriptionData.fromMap(prescriptionMap)).toList());
-  //       }
-  //     }
-  //     return prescriptionsList;
-  //   });
-  // }
+  RxString selectedMedicine = "".obs;
+  RxList selectMedicineList = [].obs;
+  RxString selectMedicineId = "".obs;
 
   Stream<List<PrescriptionData>> fetchPrescription() {
     return presRef.snapshots().map((snapshot) {
@@ -41,36 +29,53 @@ class PrescriptionController extends GetxController {
           print('No prescriptions field found in document ${userDoc.id}');
         }
       }
-      print('Fetched ${prescriptionList.length} prescriptions.');
       return prescriptionList;
     });
   }
 
-  //Future<void> updateIsApproved(String userId, String prescriptionId, bool newStatus) async {
-  //   try {
-  //     // Fetch the user's prescriptions
-  //     DocumentSnapshot userSnapshot = await prescriptionsRef.doc(userId).get();
-  //
-  //     if (userSnapshot.exists) {
-  //       List<Map<String, dynamic>> prescriptionsList = List<Map<String, dynamic>>.from(userSnapshot.data()?['prescriptions'] ?? []);
-  //
-  //       // Locate the specific prescription using the prescriptionId
-  //       for (var i = 0; i < prescriptionsList.length; i++) {
-  //         if (prescriptionsList[i]['id'] == prescriptionId) {
-  //           prescriptionsList[i]['isApproved'] = newStatus;
-  //           break;
-  //         }
-  //       }
-  //
-  //       // Update the prescriptions array for the user
-  //       await prescriptionsRef.doc(userId).update({'prescriptions': prescriptionsList});
-  //     } else {
-  //       print("User document doesn't exist.");
-  //     }
-  //   } catch (e) {
-  //     print("Error updating isApproved: $e");
-  //   }
-  // }
+  Stream<List<MedicineData>> fetchMedicine() {
+    return mediRef.snapshots().map((event) {
+      return event.docs.map((e) {
+        return MedicineData.fromMap(e.data() as Map<String, dynamic>);
+      }).toList();
+    });
+  }
+
+
+  Future<void> addMedicineToPrescriptionItem(
+      String documentId, int itemIndex, List medicineList) async {
+    DocumentReference prescriptionRef =
+    presRef.doc(documentId);
+
+    prescriptionRef.get().then((DocumentSnapshot snapshot) {
+      if (!snapshot.exists) {
+        throw Exception("Prescription Document does not exist!");
+      }
+
+      List<dynamic> prescriptionList = snapshot.get('prescriptions');
+
+      if (itemIndex < 0 || itemIndex >= prescriptionList.length) {
+        throw Exception("Prescription Item does not exist at index $itemIndex!");
+      }
+
+      Map<String, dynamic> prescriptionItem = prescriptionList[itemIndex];
+
+      prescriptionItem['medicineList'] = medicineList;
+
+      prescriptionList[itemIndex] = prescriptionItem;
+
+      return prescriptionRef.update({'prescriptions': prescriptionList});
+    }).then((_) {
+      Get.back();
+      Get.back();
+      showInSnackBar("Medicine list added successfully.",isSuccess: true);
+      selectMedicineList = [].obs;
+      selectedMedicine = "".obs;
+    }).catchError((error) {
+      showInSnackBar("Error updating document: $error");
+    });
+  }
+
 
   Future<void> approvePrescription(
       String userId, String prescriptionId, bool status) async {

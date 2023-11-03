@@ -122,8 +122,8 @@ class MedicineController extends GetxController {
   }
 
   Future<Uint8List?> pickFile() async {
-    FilePickerResult? result = await FilePicker.platform
-        .pickFiles(type: FileType.custom, allowedExtensions: ['xls', 'xlsx','ods']);
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom, allowedExtensions: ['xls', 'xlsx', 'ods']);
 
     if (result != null) {
       return result.files.single.bytes;
