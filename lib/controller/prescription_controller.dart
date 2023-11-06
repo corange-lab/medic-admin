@@ -12,7 +12,7 @@ class PrescriptionController extends GetxController {
 
   RxString selectedMedicine = "".obs;
   RxList selectMedicineList = [].obs;
-  RxString selectMedicineId = "".obs;
+  RxList selectMedicineIdList = [].obs;
 
   Stream<List<PrescriptionData>> fetchPrescription() {
     return presRef.snapshots().map((snapshot) {
@@ -33,6 +33,54 @@ class PrescriptionController extends GetxController {
     });
   }
 
+  Stream<List<PrescriptionData>> fetchPrescriptionsWithDetails() {
+    return fetchPrescription().asyncMap((prescriptionList) async {
+      final Map<String, String> medicineNamesCache = {};
+      final Map<String, String> userNamesCache = {};
+
+      Future<String> getMedicineNameFromId(String id) async {
+        if (medicineNamesCache.containsKey(id)) {
+          return medicineNamesCache[id]!;
+        }
+
+        var doc = await FirebaseFirestore.instance
+            .collection('medicines')
+            .doc(id)
+            .get();
+        var name = doc.data()?['genericName'] ?? 'Unknown Medicine';
+        medicineNamesCache[id] = name;
+        return name;
+      }
+
+      Future<String> getUserNameFromId(String id) async {
+        if (userNamesCache.containsKey(id)) {
+          return userNamesCache[id]!;
+        }
+
+        var userDoc =
+            await FirebaseFirestore.instance.collection('users').doc(id).get();
+        var username = userDoc.data()?['name'] ?? 'Unknown User';
+        userNamesCache[id] = username;
+        return username;
+      }
+
+      for (var prescription in prescriptionList) {
+        if (prescription.medicineList != null) {
+          for (var i = 0; i < prescription.medicineList!.length; i++) {
+            String medicineName =
+                await getMedicineNameFromId(prescription.medicineList![i]);
+            prescription.medicineList![i] = medicineName;
+          }
+        }
+        if (prescription.userId != null && prescription.userId!.isNotEmpty) {
+          String username = await getUserNameFromId(prescription.userId!);
+          prescription.userId = "${prescription.userId}+$username";
+        }
+      }
+      return prescriptionList;
+    });
+  }
+
   Stream<List<MedicineData>> fetchMedicine() {
     return mediRef.snapshots().map((event) {
       return event.docs.map((e) {
@@ -41,21 +89,26 @@ class PrescriptionController extends GetxController {
     });
   }
 
-
   Future<void> addMedicineToPrescriptionItem(
       String documentId, int itemIndex, List medicineList) async {
-    DocumentReference prescriptionRef =
-    presRef.doc(documentId);
+    DocumentReference prescriptionRef = presRef.doc(documentId);
 
     prescriptionRef.get().then((DocumentSnapshot snapshot) {
       if (!snapshot.exists) {
+        selectMedicineList = [].obs;
+        selectMedicineIdList = [].obs;
+        selectedMedicine = "".obs;
         throw Exception("Prescription Document does not exist!");
       }
 
-      List<dynamic> prescriptionList = snapshot.get('prescriptions');
+      List<dynamic> prescriptionList = snapshot.get('prescriptions') ?? [];
 
       if (itemIndex < 0 || itemIndex >= prescriptionList.length) {
-        throw Exception("Prescription Item does not exist at index $itemIndex!");
+        selectMedicineList = [].obs;
+        selectMedicineIdList = [].obs;
+        selectedMedicine = "".obs;
+        throw Exception(
+            "Prescription Item does not exist at index $itemIndex!");
       }
 
       Map<String, dynamic> prescriptionItem = prescriptionList[itemIndex];
@@ -68,14 +121,14 @@ class PrescriptionController extends GetxController {
     }).then((_) {
       Get.back();
       Get.back();
-      showInSnackBar("Medicine list added successfully.",isSuccess: true);
+      showInSnackBar("Medicine list added successfully.", isSuccess: true);
       selectMedicineList = [].obs;
+      selectMedicineIdList = [].obs;
       selectedMedicine = "".obs;
     }).catchError((error) {
       showInSnackBar("Error updating document: $error");
     });
   }
-
 
   Future<void> approvePrescription(
       String userId, String prescriptionId, bool status) async {

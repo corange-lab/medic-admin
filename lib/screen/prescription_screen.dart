@@ -35,7 +35,7 @@ class PrescriptionScreen extends StatelessWidget {
         ),
       ),
       body: StreamBuilder(
-        stream: controller.fetchPrescription(),
+        stream: controller.fetchPrescriptionsWithDetails(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -55,13 +55,16 @@ class PrescriptionScreen extends StatelessWidget {
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             );
-          } else if (snapshot.hasData) {
+          } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
             List<PrescriptionData> prescriptionList = snapshot.data!;
             return Padding(
               padding: const EdgeInsets.all(10.0),
               child: ListView.builder(
                 itemCount: prescriptionList.length,
                 itemBuilder: (context, index) {
+                  var prescriptionInfo = prescriptionList[index];
+                  var documentId = prescriptionInfo.id;
+                  var indexWithInDoc = prescriptionInfo.prescriptionIndex;
                   return Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 10, vertical: 10),
@@ -144,8 +147,28 @@ class PrescriptionScreen extends StatelessWidget {
                             ),
                             Align(
                               alignment: Alignment.centerLeft,
-                              child: Text(
-                                  "Medicine : ${prescriptionList[index].medicineId?[0]}"),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "Prescription By : ",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium
+                                        ?.copyWith(
+                                          fontFamily: AppFont.fontRegular,
+                                        ),
+                                  ),
+                                  Text(
+                                    prescriptionList[index].userId!.split("+").last ?? "",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium
+                                        ?.copyWith(
+                                            fontFamily: AppFont.fontMedium,
+                                            fontSize: 16),
+                                  ),
+                                ],
+                              ),
                             ),
                             const SizedBox(
                               height: 15,
@@ -154,8 +177,11 @@ class PrescriptionScreen extends StatelessWidget {
                               alignment: Alignment.centerLeft,
                               child: ElevatedButton(
                                   onPressed: () async {
-                                    showModelSheet(context, prescriptionList,
-                                        index, prescriptionList[index].userId!);
+                                    showModelSheet(
+                                        context,
+                                        prescriptionList,
+                                        indexWithInDoc!,
+                                        prescriptionList[index].documentId!);
                                   },
                                   style: ElevatedButton.styleFrom(
                                       backgroundColor: AppColors.primaryColor,
@@ -167,7 +193,32 @@ class PrescriptionScreen extends StatelessWidget {
                                   child: const Text("Select Medicines")),
                             ),
                             const SizedBox(
-                              height: 10,
+                              height: 15,
+                            ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "Medicines : ",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium
+                                        ?.copyWith(
+                                          fontFamily: AppFont.fontRegular,
+                                        ),
+                                  ),
+                                  Text(
+                                    "${prescriptionList[index].medicineList ?? ""}",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium
+                                        ?.copyWith(
+                                            fontFamily: AppFont.fontMedium,
+                                            fontSize: 16),
+                                  ),
+                                ],
+                              ),
                             ),
                             const SizedBox(
                               height: 15,
@@ -185,7 +236,7 @@ class PrescriptionScreen extends StatelessWidget {
                                             String prescriptionId =
                                                 prescriptionList[index].id!;
                                             await controller
-                                                .approvePrescription(userId,
+                                                .approvePrescription(userId.split("+").first,
                                                     prescriptionId, false);
                                           },
                                           style: ElevatedButton.styleFrom(
@@ -204,7 +255,7 @@ class PrescriptionScreen extends StatelessWidget {
                                             String prescriptionId =
                                                 prescriptionList[index].id!;
                                             await controller
-                                                .approvePrescription(userId,
+                                                .approvePrescription(userId.split("+").first,
                                                     prescriptionId, true);
                                           },
                                           style: ElevatedButton.styleFrom(
@@ -231,7 +282,10 @@ class PrescriptionScreen extends StatelessWidget {
               ),
             );
           } else {
-            return const Center(child: Text("No Data Found"));
+            return const Center(
+                child: Text(
+              "No Data Found",
+            ));
           }
         },
       ),
@@ -269,7 +323,7 @@ class PrescriptionScreen extends StatelessWidget {
                             ),
                             Expanded(
                               child: Text(
-                                "${controller.selectMedicineList}",
+                                "${controller.selectMedicineIdList}",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleMedium!
@@ -282,7 +336,7 @@ class PrescriptionScreen extends StatelessWidget {
                           ],
                         )),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 40,
                   ),
                   SizedBox(
@@ -336,15 +390,17 @@ class PrescriptionScreen extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(10),
                                 onChanged: (value) {
                                   controller.selectedMedicine.value = value!;
-
-                                  controller.selectMedicineList.add(value);
+                                  if (!controller.selectMedicineIdList
+                                      .contains(value)) {
+                                    controller.selectMedicineIdList.add(value);
+                                  }
                                 },
                                 items: medicineNameList.isNotEmpty
-                                    ? medicineNameList.map((String items) {
-                                        return DropdownMenuItem(
-                                          value: items,
+                                    ? medicineList.map((MedicineData medicine) {
+                                        return DropdownMenuItem<String>(
+                                          value: medicine.id,
                                           child: Text(
-                                            items,
+                                            medicine.genericName!,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .titleMedium!
@@ -366,14 +422,14 @@ class PrescriptionScreen extends StatelessWidget {
                       },
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 100,
                   ),
                   ElevatedButton(
                       onPressed: () async {
                         showProgressDialogue(context);
                         controller.addMedicineToPrescriptionItem(
-                            docId, index, controller.selectMedicineList);
+                            docId, index, controller.selectMedicineIdList);
                       },
                       style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primaryColor,
@@ -382,7 +438,7 @@ class PrescriptionScreen extends StatelessWidget {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30))),
                       child: const Text("Submit")),
-                  SizedBox(
+                  const SizedBox(
                     height: 50,
                   )
                 ],

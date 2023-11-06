@@ -113,10 +113,10 @@ class MedicineData {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is MedicineData &&
-              runtimeType == other.runtimeType &&
-              id == other.id &&
-              categoryId == other.categoryId;
+      other is MedicineData &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          categoryId == other.categoryId;
 
   @override
   int get hashCode => id.hashCode ^ categoryId.hashCode;
