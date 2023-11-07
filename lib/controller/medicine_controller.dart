@@ -16,11 +16,14 @@ class MedicineController extends GetxController {
   TextEditingController aboutController = TextEditingController();
   TextEditingController ratinsController = TextEditingController();
   TextEditingController brandController = TextEditingController();
+  TextEditingController categoryIdController = TextEditingController();
   TextEditingController directionUseController = TextEditingController();
   TextEditingController drugInterController = TextEditingController();
   TextEditingController safetyInfoController = TextEditingController();
   TextEditingController usesController = TextEditingController();
   TextEditingController benefitsController = TextEditingController();
+
+  RxString preRequire = "".obs;
 
   final CollectionReference medicineRef =
       FirebaseFirestore.instance.collection('medicines');
@@ -58,6 +61,15 @@ class MedicineController extends GetxController {
     var data = medicineRef.snapshots().map((event) {
       return event.docs.map((e) {
         return MedicineData.fromMap(e.data() as Map<String, dynamic>);
+      }).toList();
+    });
+    return data;
+  }
+
+  Stream<List<CategoryData>> fetchCategory() {
+    var data = categoryRef.snapshots().map((event) {
+      return event.docs.map((e) {
+        return CategoryData.fromMap(e.data() as Map<String, dynamic>);
       }).toList();
     });
     return data;

@@ -15,6 +15,8 @@ class MedicineData {
   String? uses;
   String? directionForUse;
   String? safetyInformation;
+  int? quantity;
+  bool? prescriptionRequire;
 
   MedicineData({
     this.id,
@@ -31,6 +33,8 @@ class MedicineData {
     this.uses,
     this.directionForUse,
     this.safetyInformation,
+    this.quantity,
+    this.prescriptionRequire
   });
 
   MedicineData copyWith({
@@ -48,6 +52,8 @@ class MedicineData {
     String? uses,
     String? directionForUse,
     String? safetyInformation,
+    int? quantity,
+    bool? prescriptionRequire
   }) {
     return MedicineData(
       id: id ?? this.id,
@@ -64,6 +70,8 @@ class MedicineData {
       uses: uses ?? this.uses,
       directionForUse: directionForUse ?? this.directionForUse,
       safetyInformation: safetyInformation ?? this.safetyInformation,
+      quantity: quantity ?? this.quantity,
+      prescriptionRequire: prescriptionRequire ?? this.prescriptionRequire,
     );
   }
 
@@ -83,6 +91,8 @@ class MedicineData {
       'uses': uses,
       'directionForUse': directionForUse,
       'safetyInformation': safetyInformation,
+      'quantity': quantity,
+      'prescriptionRequire': prescriptionRequire,
     };
   }
 
@@ -102,6 +112,8 @@ class MedicineData {
       uses: map['uses'],
       directionForUse: map['directionForUse'],
       safetyInformation: map['safetyInformation'],
+      quantity: map['quantity'],
+      prescriptionRequire: map['prescriptionRequire'],
     );
   }
 
@@ -113,10 +125,10 @@ class MedicineData {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is MedicineData &&
-          runtimeType == other.runtimeType &&
-          id == other.id &&
-          categoryId == other.categoryId;
+          other is MedicineData &&
+              runtimeType == other.runtimeType &&
+              id == other.id &&
+              categoryId == other.categoryId;
 
   @override
   int get hashCode => id.hashCode ^ categoryId.hashCode;

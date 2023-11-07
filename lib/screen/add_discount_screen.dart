@@ -35,16 +35,16 @@ class AddDiscount extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
-        centerTitle: true,
-        backgroundColor: AppColors.primaryColor,
-        title: Text(
-          "Add Discount",
-          style: Theme.of(context).textTheme.titleMedium!.copyWith(
-              color: Colors.white,
-              fontSize: 16,
-              fontFamily: AppFont.fontMedium),
+          centerTitle: true,
+          backgroundColor: AppColors.primaryColor,
+          title: Text(
+            "Add Discount",
+            style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                color: Colors.white,
+                fontSize: 16,
+                fontFamily: AppFont.fontMedium),
+          ),
         ),
-      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
