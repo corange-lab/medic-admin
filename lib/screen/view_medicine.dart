@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:medic_admin/controller/medicine_controller.dart';
 import 'package:medic_admin/model/medicine_data.dart';
+import 'package:medic_admin/screen/medicine_add.dart';
 import 'package:medic_admin/theme/colors.dart';
 import 'package:medic_admin/utils/app_font.dart';
+import 'package:medic_admin/utils/assets.dart';
 import 'package:medic_admin/utils/string.dart';
+import 'package:medic_admin/widgets/app_dialogue.dart';
 
 class ViewMedicine extends StatelessWidget {
   MedicineController controller = Get.put(MedicineController());
@@ -18,7 +22,7 @@ class ViewMedicine extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           ConstString.viewMedicine,
-          style:  Theme.of(context).textTheme.titleMedium!.copyWith(
+          style: Theme.of(context).textTheme.titleMedium!.copyWith(
               color: Colors.white,
               fontSize: 16,
               fontFamily: AppFont.fontMedium),
@@ -64,15 +68,91 @@ class ViewMedicine extends StatelessWidget {
                         ),
                         Align(
                           alignment: Alignment.centerLeft,
-                          child: Text(
-                            medicine[index].genericName!,
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium!
-                                .copyWith(
-                                    fontFamily: AppFont.fontBold,
-                                    fontSize: 17,
-                                    color: AppColors.primaryColor),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                medicine[index].genericName!,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium!
+                                    .copyWith(
+                                        fontFamily: AppFont.fontBold,
+                                        fontSize: 17,
+                                        color: AppColors.primaryColor),
+                              ),
+                              PopupMenuButton(
+                                elevation: 3,
+                                shadowColor: AppColors.txtGrey.withOpacity(0.1),
+                                icon: SvgPicture.asset(
+                                  AppIcons.more,
+                                  color: Colors.black,
+                                ),
+                                onSelected: (value) async {},
+                                padding: EdgeInsets.zero,
+                                itemBuilder: (context) => <PopupMenuEntry>[
+                                  PopupMenuItem(
+                                    onTap: () {
+                                      Get.to(() => MedicineAdd(
+                                            medicine: medicine[index],
+                                          ));
+                                    },
+                                    height: 35,
+                                    value: "Edit",
+                                    child: Row(
+                                      children: [
+                                        SvgPicture.asset(AppIcons.edit),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text(
+                                          "Edit",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleSmall!
+                                              .copyWith(
+                                                  fontFamily:
+                                                      AppFont.fontMedium,
+                                                  fontSize: 14,
+                                                  color: AppColors.txtGrey),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                    onTap: () async {
+                                      showProgressDialogue(context);
+                                      await controller
+                                          .deleteMedicine(medicine[index].id!);
+                                    },
+                                    height: 35,
+                                    value: "Delete",
+                                    child: Row(
+                                      children: [
+                                        SvgPicture.asset(
+                                          AppIcons.delete,
+                                          height: 14,
+                                        ),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text(
+                                          "Delete",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleSmall!
+                                              .copyWith(
+                                                  fontFamily:
+                                                      AppFont.fontMedium,
+                                                  fontSize: 14,
+                                                  color: AppColors.txtGrey),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              )
+                            ],
                           ),
                         ),
                         const SizedBox(

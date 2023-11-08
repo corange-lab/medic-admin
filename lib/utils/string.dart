@@ -58,6 +58,7 @@ class ConstString {
   static const String userName = "Your Name";
   static const String OTP = "Enter OTP";
   static const String medicineName = "Enter Medicine Name";
+  static const String categoryName = "Enter Category Name";
   static const String enterGen = "Enter Generic Name";
   static const String enterPre = "Enter Prescription require or not";
   static const String enterCategory = "Enter Category Id";
@@ -87,6 +88,8 @@ class ConstString {
   static const String orderPlacement = "Order Placement";
   static const String addCategory = "Add Category";
   static const String addMedicine = "Add Medicines";
+  static const String updateMedicine = "Update Medicines";
+  static const String updateCategory = "Update Category";
   static const String viewCategory = "View Category";
   static const String viewMedicine = "View Medicines";
   static const String medicine = "Medicines";
@@ -136,6 +139,7 @@ class ConstString {
   static const String direction = "Directions of Use";
   static const String safety = "Safety Information";
   static const String uploadMedicineImage = "Upload Medicine Image";
+  static const String uploadCategoryImage = "Upload Category Image";
   static const String FAQ = "FAQ";
   static const String rating_review = "Ratings and Reviews";
   static const String howwork = "How it Works";

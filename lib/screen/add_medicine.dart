@@ -55,7 +55,7 @@ class AddMedicine extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
               child: ElevatedButton(
                   onPressed: () {
-                    Get.to(()=> MedicineAdd());
+                    Get.to(() => MedicineAdd());
                   },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primaryColor,
@@ -110,7 +110,7 @@ class AddMedicine extends StatelessWidget {
                         cells: controller.columnHeader.map((header) {
                       return DataCell(Text(
                         rowMap[header]?.toString() ?? "N/A",
-                        // Convert value to string using toString()
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                             color: AppColors.darkPrimaryColor,
                             fontFamily: AppFont.fontMedium),

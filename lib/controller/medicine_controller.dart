@@ -9,8 +9,10 @@ import 'package:get/get.dart';
 import 'package:medic_admin/model/category_data.dart';
 import 'package:medic_admin/model/medicine_data.dart';
 import 'package:medic_admin/utils/utils.dart';
+import 'package:medic_admin/widgets/pick_image.dart';
 
 class MedicineController extends GetxController {
+  TextEditingController categoryController = TextEditingController();
   TextEditingController medicineController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController aboutController = TextEditingController();
@@ -23,7 +25,9 @@ class MedicineController extends GetxController {
   TextEditingController usesController = TextEditingController();
   TextEditingController benefitsController = TextEditingController();
 
-  RxString preRequire = "".obs;
+  PickImageController pickImageController = Get.put(PickImageController());
+
+  RxString preRequire = "Yes".obs;
 
   final CollectionReference medicineRef =
       FirebaseFirestore.instance.collection('medicines');
@@ -53,6 +57,21 @@ class MedicineController extends GetxController {
       showInSnackBar("Please enter medicine description.",
           title: 'Required!', isSuccess: false);
       return false;
+    } else if (pickImageController.image == null) {
+      showInSnackBar("Please select medicine image");
+      return false;
+    }
+    return true;
+  }
+
+  bool validateCategoryData() {
+    if (categoryController.text.trim().isEmpty) {
+      showInSnackBar("Please enter category name.",
+          title: 'Required!', isSuccess: false);
+      return false;
+    } else if (pickImageController.categoryImage == null) {
+      showInSnackBar("Please select category image");
+      return false;
     }
     return true;
   }
@@ -64,6 +83,64 @@ class MedicineController extends GetxController {
       }).toList();
     });
     return data;
+  }
+
+  deleteMedicine(String medicineId) async {
+    DocumentReference docRef = medicineRef.doc(medicineId);
+
+    await docRef.delete().then((value) {
+      Get.back();
+      showInSnackBar("Medicine Data Deleted Successfully!",
+          isSuccess: true, title: "The Medic");
+    }).onError((error, stackTrace) {
+      showInSnackBar("Error : ${error}");
+    });
+  }
+
+  deleteCategory(String categoryId) async {
+    DocumentReference docRef = categoryRef.doc(categoryId);
+
+    await docRef.delete().then((value) {
+      Get.back();
+      showInSnackBar("Category Data Deleted Successfully!",
+          isSuccess: true, title: "The Medic");
+    }).onError((error, stackTrace) {
+      showInSnackBar("Error : ${error}");
+    });
+  }
+
+  updateMedicine(MedicineData medicine) async {
+    DocumentReference medicineDoc = medicineRef.doc(medicine.id);
+
+    await medicineDoc.update(medicine.toMap()).then((value) {
+      Get.back();
+      showInSnackBar("Medicine Data Updated Successfully!", isSuccess: true);
+      medicineController.clear();
+      brandController.clear();
+      descriptionController.clear();
+      categoryIdController.clear();
+      ratinsController.clear();
+      usesController.clear();
+      aboutController.clear();
+      directionUseController.clear();
+      benefitsController.clear();
+      drugInterController.clear();
+      safetyInfoController.clear();
+    }).onError((error, stackTrace) {
+      showInSnackBar("Error : ${error}");
+    });
+  }
+
+  updateCategory(CategoryData category) async {
+    DocumentReference categoryDoc = categoryRef.doc(category.id);
+
+    await categoryDoc.update(category.toMap()).then((value) {
+      Get.back();
+      showInSnackBar("Category Data Updated Successfully!", isSuccess: true);
+      categoryController.clear();
+    }).onError((error, stackTrace) {
+      showInSnackBar("Error : ${error}");
+    });
   }
 
   Stream<List<CategoryData>> fetchCategory() {
@@ -102,6 +179,38 @@ class MedicineController extends GetxController {
           isSuccess: true,
           title: "The Medic");
     }
+  }
+
+  storeMedicineData(MedicineData medicine) async {
+    await medicineRef.doc(medicine.id).set(medicine.toMap()).then((value) {
+      Get.back();
+      showInSnackBar("Medicine Added Successfully",
+          isSuccess: true, title: "The Medic");
+      medicineController.clear();
+      brandController.clear();
+      descriptionController.clear();
+      categoryIdController.clear();
+      ratinsController.clear();
+      usesController.clear();
+      aboutController.clear();
+      directionUseController.clear();
+      benefitsController.clear();
+      drugInterController.clear();
+      safetyInfoController.clear();
+    }).catchError((error) {
+      print("Error : ${error}");
+    });
+  }
+
+  storeCategoryData(CategoryData category) async {
+    await categoryRef.doc(category.id).set(category.toMap()).then((value) {
+      Get.back();
+      showInSnackBar("Category Added Successfully",
+          isSuccess: true, title: "The Medic");
+      categoryController.clear();
+    }).catchError((error) {
+      print("Error : ${error}");
+    });
   }
 
   Future<void> addCategoryDataToFirestore() async {
@@ -181,6 +290,7 @@ class MedicineController extends GetxController {
           uses: row[11]?.value?.toString(),
           directionForUse: row[12]?.value?.toString(),
           safetyInformation: row[13]?.value?.toString(),
+          // prescriptionRequire: row[14]?.value,
         ));
       }
     }

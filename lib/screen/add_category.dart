@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:medic_admin/controller/medicine_controller.dart';
+import 'package:medic_admin/screen/category_add.dart';
 import 'package:medic_admin/theme/colors.dart';
 import 'package:medic_admin/utils/app_font.dart';
 import 'package:medic_admin/utils/string.dart';
@@ -36,18 +37,36 @@ class AddCategory extends StatelessWidget {
           ],
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-          child: ElevatedButton(
-              onPressed: () {
-                controller.importCategoryData();
-              },
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryColor,
-                  fixedSize: Size(200, 50),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(40))),
-              child: Text("Pick File")),
+        floatingActionButton: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              child: ElevatedButton(
+                  onPressed: () {
+                    controller.importCategoryData();
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryColor,
+                      fixedSize: Size(200, 50),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(40))),
+                  child: Text("Pick File")),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              child: ElevatedButton(
+                  onPressed: () {
+                    Get.to(() => CategoryAdd());
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryColor,
+                      fixedSize: const Size(200, 50),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(40))),
+                  child: const Text(ConstString.addCategory)),
+            ),
+          ],
         ),
         body: Obx(
           () {

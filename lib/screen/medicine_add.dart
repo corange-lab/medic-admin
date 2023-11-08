@@ -1,27 +1,54 @@
-// ignore_for_file: unrelated_type_equality_checks
+// ignore_for_file: unrelated_type_equality_checks, must_be_immutable, unnecessary_null_comparison
+
+import 'dart:html' as html;
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:medic_admin/controller/medicine_controller.dart';
+import 'package:medic_admin/model/medicine_data.dart';
 import 'package:medic_admin/theme/colors.dart';
 import 'package:medic_admin/utils/app_font.dart';
 import 'package:medic_admin/utils/string.dart';
+import 'package:medic_admin/widgets/app_dialogue.dart';
 import 'package:medic_admin/widgets/pick_image.dart';
 
 class MedicineAdd extends StatelessWidget {
   PickImageController pickImageController = Get.put(PickImageController());
   MedicineController controller = Get.put(MedicineController());
 
-  MedicineAdd({super.key});
+  MedicineData? medicine;
+
+  MedicineAdd({super.key, this.medicine});
 
   @override
   Widget build(BuildContext context) {
+    if (medicine != null) {
+      controller.medicineController.text = medicine?.genericName ?? "";
+      controller.brandController.text = medicine?.brandName ?? "";
+      controller.descriptionController.text = medicine?.description ?? "";
+      controller.categoryIdController.text = medicine?.categoryId ?? "";
+      controller.ratinsController.text = medicine?.ratings ?? "";
+      controller.usesController.text = medicine?.uses ?? "";
+      controller.aboutController.text = medicine?.about ?? "";
+      controller.directionUseController.text = medicine?.directionForUse ?? "";
+      controller.benefitsController.text = medicine?.benefits ?? "";
+      controller.drugInterController.text =
+          medicine?.drugDrugInteractions ?? "";
+      controller.safetyInfoController.text = medicine?.safetyInformation ?? "";
+      controller.preRequire.value =
+          medicine!.prescriptionRequire! ? "Yes" : "No";
+    }
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: AppColors.primaryColor,
         title: Text(
-          ConstString.addMedicine,
+          medicine == null
+              ? ConstString.addMedicine
+              : ConstString.updateMedicine,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
               color: Colors.white,
               fontSize: 16,
@@ -34,8 +61,8 @@ class MedicineAdd extends StatelessWidget {
           child: Column(
             children: [
               GestureDetector(
-                onTap: () {
-                  pickImageController.pickMedicineImage();
+                onTap: () async {
+                  pickImageController.image = await pickImageController.pickImage();
                 },
                 child: Container(
                   height: 150,
@@ -71,14 +98,14 @@ class MedicineAdd extends StatelessWidget {
                   ),
                 ),
               ),
-              Obx(
-                () => pickImageController.imgPath != ""
-                    ? Text(
-                        "Selected Image : ${pickImageController.imgPath}",
-                        style: Theme.of(context).textTheme.titleSmall,
-                      )
-                    : const SizedBox(),
-              ),
+              // Obx(
+              //   () => pickImageController.imgPath != ""
+              //       ? Text(
+              //           "Selected Image : ${pickImageController.imgPath}",
+              //           style: Theme.of(context).textTheme.titleSmall,
+              //         )
+              //       : const SizedBox(),
+              // ),
               const SizedBox(
                 height: 30,
               ),
@@ -97,6 +124,9 @@ class MedicineAdd extends StatelessWidget {
               ),
               TextField(
                   controller: controller.medicineController,
+                  textCapitalization: TextCapitalization.words,
+                  textInputAction: TextInputAction.newline,
+                  enableInteractiveSelection: true,
                   decoration: InputDecoration(
                     hintText: ConstString.enterGen,
                     hintStyle: TextStyle(
@@ -134,6 +164,8 @@ class MedicineAdd extends StatelessWidget {
               ),
               TextField(
                   controller: controller.brandController,
+                  textCapitalization: TextCapitalization.sentences,
+                  textInputAction: TextInputAction.newline,
                   decoration: InputDecoration(
                     hintText: ConstString.enterBrand,
                     hintStyle: TextStyle(
@@ -171,6 +203,8 @@ class MedicineAdd extends StatelessWidget {
               ),
               TextField(
                   controller: controller.descriptionController,
+                  textCapitalization: TextCapitalization.sentences,
+                  textInputAction: TextInputAction.newline,
                   decoration: InputDecoration(
                     hintText: ConstString.enterDecsription,
                     hintStyle: TextStyle(
@@ -208,6 +242,8 @@ class MedicineAdd extends StatelessWidget {
               ),
               TextField(
                   controller: controller.categoryIdController,
+                  textCapitalization: TextCapitalization.sentences,
+                  textInputAction: TextInputAction.newline,
                   decoration: InputDecoration(
                     hintText: ConstString.enterCategory,
                     hintStyle: TextStyle(
@@ -244,6 +280,10 @@ class MedicineAdd extends StatelessWidget {
                 height: 10,
               ),
               TextField(
+                  keyboardType: TextInputType.number,
+                  textCapitalization: TextCapitalization.sentences,
+                  textInputAction: TextInputAction.newline,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   controller: controller.ratinsController,
                   decoration: InputDecoration(
                     hintText: ConstString.enterRate,
@@ -282,6 +322,8 @@ class MedicineAdd extends StatelessWidget {
               ),
               TextField(
                   controller: controller.usesController,
+                  textCapitalization: TextCapitalization.sentences,
+                  textInputAction: TextInputAction.newline,
                   decoration: InputDecoration(
                     hintText: ConstString.enterUses,
                     hintStyle: TextStyle(
@@ -319,6 +361,8 @@ class MedicineAdd extends StatelessWidget {
               ),
               TextField(
                   controller: controller.aboutController,
+                  textCapitalization: TextCapitalization.sentences,
+                  textInputAction: TextInputAction.newline,
                   decoration: InputDecoration(
                     hintText: ConstString.enterAbout,
                     hintStyle: TextStyle(
@@ -356,6 +400,8 @@ class MedicineAdd extends StatelessWidget {
               ),
               TextField(
                   controller: controller.directionUseController,
+                  textCapitalization: TextCapitalization.sentences,
+                  textInputAction: TextInputAction.newline,
                   decoration: InputDecoration(
                     hintText: ConstString.enterDirection,
                     hintStyle: TextStyle(
@@ -393,6 +439,8 @@ class MedicineAdd extends StatelessWidget {
               ),
               TextField(
                   controller: controller.benefitsController,
+                  textCapitalization: TextCapitalization.sentences,
+                  textInputAction: TextInputAction.newline,
                   decoration: InputDecoration(
                     hintText: ConstString.enterBeni,
                     hintStyle: TextStyle(
@@ -430,6 +478,8 @@ class MedicineAdd extends StatelessWidget {
               ),
               TextField(
                   controller: controller.drugInterController,
+                  textCapitalization: TextCapitalization.sentences,
+                  textInputAction: TextInputAction.newline,
                   decoration: InputDecoration(
                     hintText: ConstString.enterDrug,
                     hintStyle: TextStyle(
@@ -467,6 +517,8 @@ class MedicineAdd extends StatelessWidget {
               ),
               TextField(
                   controller: controller.safetyInfoController,
+                  textCapitalization: TextCapitalization.sentences,
+                  textInputAction: TextInputAction.newline,
                   decoration: InputDecoration(
                     hintText: ConstString.enterSafety,
                     hintStyle: TextStyle(
@@ -502,29 +554,100 @@ class MedicineAdd extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              // Container(
-              //   child: DropdownButton<String>(
-              //     value: controller.preRequire.value,
-              //     onChanged: (newValue) {
-              //       controller.preRequire.value = newValue!;
-              //     },
-              //     items: const [
-              //       DropdownMenuItem<String>(
-              //         value: "Yes",
-              //         child: Text("Yes"),
-              //       ),
-              //       DropdownMenuItem<String>(
-              //         value: "No",
-              //         child: Text("No"),
-              //       )
-              //     ],
-              //   ),
-              // ),
+              Obx(() => Container(
+                    height: 40,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: AppColors.darkPrimaryColor)),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 10),
+                      child: DropdownButton<String?>(
+                        underline: const SizedBox(),
+                        value: controller.preRequire.value,
+                        onChanged: (newValue) {
+                          controller.preRequire.value = newValue!;
+                        },
+                        items: const [
+                          DropdownMenuItem<String?>(
+                            value: "Yes",
+                            child: Text("Yes"),
+                          ),
+                          DropdownMenuItem<String?>(
+                            value: "No",
+                            child: Text("No"),
+                          )
+                        ],
+                      ),
+                    ),
+                  )),
               const SizedBox(
                 height: 20,
               ),
               ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    if (controller.validateData()) {
+                      showProgressDialogue(context);
+                      String id = controller.medicineRef.doc().id;
+
+                      String? imageUrl = await pickImageController
+                          .uploadImageToStorage(pickImageController.image, id);
+
+                      if (imageUrl == null) return;
+
+                      if (medicine == null) {
+                        MedicineData medicineData = MedicineData(
+                            id: id,
+                            genericName: controller.medicineController.text,
+                            brandName: controller.brandController.text,
+                            description: controller.descriptionController.text,
+                            categoryId: controller.categoryIdController.text,
+                            ratings: controller.ratinsController.text,
+                            image: imageUrl,
+                            uses: controller.usesController.text,
+                            about: controller.aboutController.text,
+                            directionForUse:
+                                controller.directionUseController.text,
+                            benefits: controller.benefitsController.text,
+                            drugDrugInteractions:
+                                controller.drugInterController.text,
+                            safetyInformation:
+                                controller.safetyInfoController.text,
+                            prescriptionRequire:
+                                controller.preRequire.value == "Yes"
+                                    ? true
+                                    : false);
+                        await controller.storeMedicineData(medicineData);
+                        pickImageController.image = null;
+                      } else {
+                        MedicineData medicineData = MedicineData(
+                            id: medicine!.id,
+                            genericName: controller.medicineController.text,
+                            brandName: controller.brandController.text,
+                            description: controller.descriptionController.text,
+                            categoryId: controller.categoryIdController.text,
+                            ratings: controller.ratinsController.text,
+                            image: imageUrl,
+                            uses: controller.usesController.text,
+                            about: controller.aboutController.text,
+                            directionForUse:
+                                controller.directionUseController.text,
+                            benefits: controller.benefitsController.text,
+                            drugDrugInteractions:
+                                controller.drugInterController.text,
+                            safetyInformation:
+                                controller.safetyInfoController.text,
+                            prescriptionRequire:
+                                controller.preRequire.value == "Yes"
+                                    ? true
+                                    : false);
+                        await controller.updateMedicine(medicineData);
+                        pickImageController.image = null;
+                      }
+                    }
+                  },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primaryColor,
                       fixedSize: const Size(200, 40),
@@ -532,7 +655,9 @@ class MedicineAdd extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30))),
                   child: Text(
-                    ConstString.addMedicine,
+                    medicine == null
+                        ? ConstString.addMedicine
+                        : ConstString.updateMedicine,
                     style: Theme.of(context).textTheme.displayMedium!.copyWith(
                           color: Colors.white,
                         ),
