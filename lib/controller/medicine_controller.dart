@@ -85,6 +85,18 @@ class MedicineController extends GetxController {
     return data;
   }
 
+  Stream<List<MedicineData>> fetchPopularMedicine() {
+    var data = medicineRef
+        .where('ratings', isGreaterThanOrEqualTo: "3.5")
+        .snapshots()
+        .map((event) {
+      return event.docs.map((e) {
+        return MedicineData.fromMap(e.data() as Map<String, dynamic>);
+      }).toList();
+    });
+    return data;
+  }
+
   deleteMedicine(String medicineId) async {
     DocumentReference docRef = medicineRef.doc(medicineId);
 

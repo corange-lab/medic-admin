@@ -159,7 +159,11 @@ class PrescriptionScreen extends StatelessWidget {
                                         ),
                                   ),
                                   Text(
-                                    prescriptionList[index].userId!.split("+").last ?? "",
+                                    prescriptionList[index]
+                                            .userId!
+                                            .split("+")
+                                            .last ??
+                                        "",
                                     style: Theme.of(context)
                                         .textTheme
                                         .titleMedium
@@ -208,14 +212,16 @@ class PrescriptionScreen extends StatelessWidget {
                                           fontFamily: AppFont.fontRegular,
                                         ),
                                   ),
-                                  Text(
-                                    "${prescriptionList[index].medicineList ?? ""}",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleMedium
-                                        ?.copyWith(
-                                            fontFamily: AppFont.fontMedium,
-                                            fontSize: 16),
+                                  Expanded(
+                                    child: Text(
+                                      "${prescriptionList[index].medicineList ?? ""}",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium
+                                          ?.copyWith(
+                                              fontFamily: AppFont.fontMedium,
+                                              fontSize: 16),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -236,8 +242,10 @@ class PrescriptionScreen extends StatelessWidget {
                                             String prescriptionId =
                                                 prescriptionList[index].id!;
                                             await controller
-                                                .approvePrescription(userId.split("+").first,
-                                                    prescriptionId, false);
+                                                .approvePrescription(
+                                                    userId.split("+").first,
+                                                    prescriptionId,
+                                                    false);
                                           },
                                           style: ElevatedButton.styleFrom(
                                               backgroundColor: AppColors.red,
@@ -255,8 +263,10 @@ class PrescriptionScreen extends StatelessWidget {
                                             String prescriptionId =
                                                 prescriptionList[index].id!;
                                             await controller
-                                                .approvePrescription(userId.split("+").first,
-                                                    prescriptionId, true);
+                                                .approvePrescription(
+                                                    userId.split("+").first,
+                                                    prescriptionId,
+                                                    true);
                                           },
                                           style: ElevatedButton.styleFrom(
                                               backgroundColor: AppColors.green,

@@ -124,11 +124,7 @@ Future showProgressDialogue(BuildContext context) {
                 colors: [AppColors.primaryColor],
                 indicatorType: Indicator.ballScale,
                 strokeWidth: 1,
-              ), /*CupertinoActivityIndicator(
-                radius: 15,
-                animating: true,
-                color: AppColors.primaryColor,
-              ),*/
+              ),
             ),
           ),
         ],

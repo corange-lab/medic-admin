@@ -105,7 +105,7 @@ class ViewCategory extends StatelessWidget {
                                   color: AppColors.primaryColor,
                                   fontFamily: AppFont.fontMedium),
                         ),
-                        Spacer(),
+                        const Spacer(),
                         PopupMenuButton(
                           elevation: 3,
                           shadowColor: AppColors.txtGrey.withOpacity(0.1),
@@ -119,8 +119,8 @@ class ViewCategory extends StatelessWidget {
                             PopupMenuItem(
                               onTap: () {
                                 Get.to(() => CategoryAdd(
-                                  category: categoryList[index],
-                                ));
+                                      category: categoryList[index],
+                                    ));
                               },
                               height: 35,
                               value: "Edit",
@@ -136,10 +136,9 @@ class ViewCategory extends StatelessWidget {
                                         .textTheme
                                         .titleSmall!
                                         .copyWith(
-                                        fontFamily:
-                                        AppFont.fontMedium,
-                                        fontSize: 14,
-                                        color: AppColors.txtGrey),
+                                            fontFamily: AppFont.fontMedium,
+                                            fontSize: 14,
+                                            color: AppColors.txtGrey),
                                   ),
                                 ],
                               ),
@@ -167,10 +166,9 @@ class ViewCategory extends StatelessWidget {
                                         .textTheme
                                         .titleSmall!
                                         .copyWith(
-                                        fontFamily:
-                                        AppFont.fontMedium,
-                                        fontSize: 14,
-                                        color: AppColors.txtGrey),
+                                            fontFamily: AppFont.fontMedium,
+                                            fontSize: 14,
+                                            color: AppColors.txtGrey),
                                   ),
                                 ],
                               ),
