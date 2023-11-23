@@ -16,7 +16,9 @@ class MedicineData {
   String? directionForUse;
   String? safetyInformation;
   int? quantity;
+  int? medicinePrice;
   bool? prescriptionRequire;
+  String? type;
 
   MedicineData({
     this.id,
@@ -34,7 +36,9 @@ class MedicineData {
     this.directionForUse,
     this.safetyInformation,
     this.quantity,
-    this.prescriptionRequire
+    this.medicinePrice,
+    this.prescriptionRequire,
+    this.type,
   });
 
   MedicineData copyWith({
@@ -53,7 +57,9 @@ class MedicineData {
     String? directionForUse,
     String? safetyInformation,
     int? quantity,
-    bool? prescriptionRequire
+    int? medicinePrice,
+    bool? prescriptionRequire,
+    String? type,
   }) {
     return MedicineData(
       id: id ?? this.id,
@@ -71,7 +77,9 @@ class MedicineData {
       directionForUse: directionForUse ?? this.directionForUse,
       safetyInformation: safetyInformation ?? this.safetyInformation,
       quantity: quantity ?? this.quantity,
+      medicinePrice: medicinePrice ?? this.medicinePrice,
       prescriptionRequire: prescriptionRequire ?? this.prescriptionRequire,
+      type: type ?? this.type,
     );
   }
 
@@ -92,7 +100,9 @@ class MedicineData {
       'directionForUse': directionForUse,
       'safetyInformation': safetyInformation,
       'quantity': quantity,
+      'medicinePrice': medicinePrice,
       'prescriptionRequire': prescriptionRequire,
+      'type': type,
     };
   }
 
@@ -113,7 +123,9 @@ class MedicineData {
       directionForUse: map['directionForUse'],
       safetyInformation: map['safetyInformation'],
       quantity: map['quantity'],
+      medicinePrice: map['medicinePrice'],
       prescriptionRequire: map['prescriptionRequire'],
+      type: map['type'],
     );
   }
 
@@ -125,10 +137,10 @@ class MedicineData {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is MedicineData &&
-              runtimeType == other.runtimeType &&
-              id == other.id &&
-              categoryId == other.categoryId;
+      other is MedicineData &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          categoryId == other.categoryId;
 
   @override
   int get hashCode => id.hashCode ^ categoryId.hashCode;

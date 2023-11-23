@@ -5,12 +5,14 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:medic_admin/controller/medicine_controller.dart';
 import 'package:medic_admin/model/medicine_data.dart';
 import 'package:medic_admin/theme/colors.dart';
 import 'package:medic_admin/utils/app_font.dart';
+import 'package:medic_admin/utils/assets.dart';
 import 'package:medic_admin/utils/string.dart';
 import 'package:medic_admin/widgets/app_dialogue.dart';
 import 'package:medic_admin/widgets/pick_image.dart';
@@ -28,6 +30,8 @@ class MedicineAdd extends StatelessWidget {
     if (medicine != null) {
       controller.medicineController.text = medicine?.genericName ?? "";
       controller.brandController.text = medicine?.brandName ?? "";
+      controller.priceController.text =
+          medicine!.medicinePrice.toString() ?? "";
       controller.descriptionController.text = medicine?.description ?? "";
       controller.categoryIdController.text = medicine?.categoryId ?? "";
       controller.ratinsController.text = medicine?.ratings ?? "";
@@ -62,7 +66,8 @@ class MedicineAdd extends StatelessWidget {
             children: [
               GestureDetector(
                 onTap: () async {
-                  pickImageController.image = await pickImageController.pickImage();
+                  pickImageController.image =
+                      await pickImageController.pickImage();
                 },
                 child: Container(
                   height: 150,
@@ -203,6 +208,45 @@ class MedicineAdd extends StatelessWidget {
               ),
               TextField(
                   controller: controller.descriptionController,
+                  textCapitalization: TextCapitalization.sentences,
+                  textInputAction: TextInputAction.newline,
+                  decoration: InputDecoration(
+                    hintText: ConstString.enterDecsription,
+                    hintStyle: TextStyle(
+                        fontFamily: AppFont.fontMedium,
+                        color: AppColors.phoneGrey,
+                        fontSize: 14),
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(color: AppColors.lineGrey)),
+                    disabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: AppColors.lineGrey)),
+                    enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: AppColors.lineGrey)),
+                    focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: AppColors.lineGrey)),
+                    errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: AppColors.lineGrey)),
+                    focusedErrorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: AppColors.lineGrey)),
+                  )),
+              const SizedBox(
+                height: 20,
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  ConstString.mediPrice,
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleLarge!
+                      .copyWith(fontFamily: AppFont.fontMedium),
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              TextField(
+                  controller: controller.priceController,
                   textCapitalization: TextCapitalization.sentences,
                   textInputAction: TextInputAction.newline,
                   decoration: InputDecoration(
@@ -586,6 +630,76 @@ class MedicineAdd extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  ConstString.type,
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleLarge!
+                      .copyWith(fontFamily: AppFont.fontMedium),
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Obx(() => Container(
+                      decoration: BoxDecoration(
+                          color: AppColors.white,
+                          border: Border.all(color: AppColors.lineGrey),
+                          borderRadius: BorderRadius.circular(10)),
+                      child: DropdownButton(
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleSmall!
+                            .copyWith(fontSize: 15),
+                        hint: Text(
+                          "Select Discount Type",
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleSmall!
+                              .copyWith(fontSize: 15, color: AppColors.txtGrey),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        icon: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SvgPicture.asset(
+                            AppIcons.arrowDown,
+                            color: AppColors.primaryColor,
+                          ),
+                        ),
+                        underline: const SizedBox(),
+                        borderRadius: BorderRadius.circular(10),
+                        dropdownColor: AppColors.white,
+                        onChanged: (value) {
+                          controller.type.value = value!;
+                        },
+                        items: controller.typeList.isNotEmpty
+                            ? controller.typeList.map((String items) {
+                                return DropdownMenuItem(
+                                  value: items,
+                                  child: Text(
+                                    items,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium!
+                                        .copyWith(fontSize: 15),
+                                  ),
+                                );
+                              }).toList()
+                            : null,
+                        value:
+                            controller.typeList.contains(controller.type.value)
+                                ? controller.type.value
+                                : null,
+                      ),
+                    )),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
               ElevatedButton(
                   onPressed: () async {
                     if (controller.validateData()) {
@@ -595,7 +709,7 @@ class MedicineAdd extends StatelessWidget {
                       String? imageUrl = await pickImageController
                           .uploadImageToStorage(pickImageController.image, id);
 
-                      if (imageUrl == null) return;
+                      // if (imageUrl == null) return;
 
                       if (medicine == null) {
                         MedicineData medicineData = MedicineData(
@@ -603,6 +717,8 @@ class MedicineAdd extends StatelessWidget {
                             genericName: controller.medicineController.text,
                             brandName: controller.brandController.text,
                             description: controller.descriptionController.text,
+                            medicinePrice:
+                                int.parse(controller.priceController.text),
                             categoryId: controller.categoryIdController.text,
                             ratings: controller.ratinsController.text,
                             image: imageUrl,
@@ -618,7 +734,8 @@ class MedicineAdd extends StatelessWidget {
                             prescriptionRequire:
                                 controller.preRequire.value == "Yes"
                                     ? true
-                                    : false);
+                                    : false,
+                            type: controller.type.value);
                         await controller.storeMedicineData(medicineData);
                         pickImageController.image = null;
                       } else {
@@ -627,6 +744,8 @@ class MedicineAdd extends StatelessWidget {
                             genericName: controller.medicineController.text,
                             brandName: controller.brandController.text,
                             description: controller.descriptionController.text,
+                            medicinePrice:
+                                int.parse(controller.priceController.text),
                             categoryId: controller.categoryIdController.text,
                             ratings: controller.ratinsController.text,
                             image: imageUrl,
@@ -642,7 +761,8 @@ class MedicineAdd extends StatelessWidget {
                             prescriptionRequire:
                                 controller.preRequire.value == "Yes"
                                     ? true
-                                    : false);
+                                    : false,
+                            type: controller.type.value);
                         await controller.updateMedicine(medicineData);
                         pickImageController.image = null;
                       }

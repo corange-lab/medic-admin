@@ -16,8 +16,7 @@ class AddMedicine extends StatelessWidget {
         appBar: AppBar(
           title: Text(
             ConstString.addMedicine,
-            style: Theme
-                .of(context)
+            style: Theme.of(context)
                 .textTheme
                 .titleLarge!
                 .copyWith(color: AppColors.white),
@@ -68,25 +67,25 @@ class AddMedicine extends StatelessWidget {
           ],
         ),
         body: Obx(
-              () {
+          () {
             if (controller.mediDataList.isEmpty) {
               return Center(
                   child: Text(
-                    "No data available. Please pick a file to load the data.",
-                    style: TextStyle(
-                        fontFamily: AppFont.fontMedium,
-                        fontSize: 17,
-                        color: AppColors.primaryColor),
-                  ));
+                "No data available. Please pick a file to load the data.",
+                style: TextStyle(
+                    fontFamily: AppFont.fontMedium,
+                    fontSize: 17,
+                    color: AppColors.primaryColor),
+              ));
             } else if (controller.columnHeader.isEmpty) {
               return Center(
                   child: Text(
-                    "No columns found in the loaded file. Please ensure the Excel file has headers.",
-                    style: TextStyle(
-                        fontFamily: AppFont.fontMedium,
-                        fontSize: 17,
-                        color: AppColors.primaryColor),
-                  ));
+                "No columns found in the loaded file. Please ensure the Excel file has headers.",
+                style: TextStyle(
+                    fontFamily: AppFont.fontMedium,
+                    fontSize: 17,
+                    color: AppColors.primaryColor),
+              ));
             } else {
               return SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
@@ -94,11 +93,10 @@ class AddMedicine extends StatelessWidget {
                   clipBehavior: Clip.antiAliasWithSaveLayer,
                   columnSpacing: 15,
                   headingRowColor:
-                  MaterialStateProperty.all(AppColors.tilePrimaryColor),
+                      MaterialStateProperty.all(AppColors.tilePrimaryColor),
                   columns: controller.columnHeader
-                      .map((header) =>
-                      DataColumn(
-                          label: Text(
+                      .map((header) => DataColumn(
+                              label: Text(
                             header,
                             style: TextStyle(
                                 fontFamily: AppFont.fontMedium,
@@ -110,14 +108,14 @@ class AddMedicine extends StatelessWidget {
                     Map<String, dynamic> rowMap = medicineData.toMap();
                     return DataRow(
                         cells: controller.columnHeader.map((header) {
-                          return DataCell(Text(
-                            rowMap[header]?.toString() ?? "N/A",
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                color: AppColors.darkPrimaryColor,
-                                fontFamily: AppFont.fontMedium),
-                          ));
-                        }).toList());
+                      return DataCell(Text(
+                        rowMap[header]?.toString() ?? "N/A",
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            color: AppColors.darkPrimaryColor,
+                            fontFamily: AppFont.fontMedium),
+                      ));
+                    }).toList());
                   }).toList(),
                 ),
               );

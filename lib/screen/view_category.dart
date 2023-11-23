@@ -45,7 +45,10 @@ class ViewCategory extends StatelessWidget {
       stream: controller.fetchCategory(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CupertinoActivityIndicator();
+          return Center(
+              child: CupertinoActivityIndicator(
+            color: AppColors.primaryColor,
+          ));
         } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
           List<CategoryData> categoryList = snapshot.data!;
           return ListView.builder(

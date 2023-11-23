@@ -28,23 +28,23 @@ class AddDiscount extends StatelessWidget {
           discountData!.amount!.toStringAsFixed(2);
       controller.disCodeController.text = discountData?.code ?? "";
       controller.discountType.value = discountData?.type ?? "";
-    }else{
+    } else {
       controller.clearController();
     }
 
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
-          centerTitle: true,
-          backgroundColor: AppColors.primaryColor,
-          title: Text(
-            "Add Discount",
-            style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                color: Colors.white,
-                fontSize: 16,
-                fontFamily: AppFont.fontMedium),
-          ),
+        centerTitle: true,
+        backgroundColor: AppColors.primaryColor,
+        title: Text(
+          "Add Discount",
+          style: Theme.of(context).textTheme.titleMedium!.copyWith(
+              color: Colors.white,
+              fontSize: 16,
+              fontFamily: AppFont.fontMedium),
         ),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -268,15 +268,14 @@ class AddDiscount extends StatelessWidget {
               ElevatedButton(
                   onPressed: () async {
                     if (controller.validateData()) {
-
                       showProgressDialogue(context);
                       String id = controller.discountRef.doc().id;
 
-                      if(discountData == null){
+                      if (discountData == null) {
                         DiscountDataModel discountDataModel = DiscountDataModel(
                             id: id,
                             discountName:
-                            controller.disNameController.text.trim(),
+                                controller.disNameController.text.trim(),
                             type: controller.discountType.value,
                             percentage: double.parse(
                                 controller.disPerController.text.trim()),
@@ -285,12 +284,11 @@ class AddDiscount extends StatelessWidget {
                             code: controller.disCodeController.text.trim());
 
                         await controller.addDiscountData(discountDataModel);
-
-                      }else{
+                      } else {
                         DiscountDataModel discountDataModel = DiscountDataModel(
                             id: discountData!.id,
                             discountName:
-                            controller.disNameController.text.trim(),
+                                controller.disNameController.text.trim(),
                             type: controller.discountType.value,
                             percentage: double.parse(
                                 controller.disPerController.text.trim()),
@@ -300,8 +298,7 @@ class AddDiscount extends StatelessWidget {
 
                         await controller.addDiscountData(discountDataModel);
                       }
-
-                      }
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primaryColor,

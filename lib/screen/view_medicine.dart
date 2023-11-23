@@ -1,3 +1,6 @@
+// ignore_for_file: must_be_immutable
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -40,13 +43,13 @@ class ViewMedicine extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
-            child: CircularProgressIndicator(
+            child: CupertinoActivityIndicator(
               color: AppColors.primaryColor,
             ),
           );
-        }
-
-        if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+        } else if (snapshot.hasError) {
+          return Center(child: Text("Error : ${snapshot.error}"));
+        } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
           List<MedicineData> medicine = snapshot.data!;
           return ListView.builder(
             itemCount: medicine.length,
@@ -308,6 +311,26 @@ class ViewMedicine extends StatelessWidget {
                             Expanded(
                               child: Text(
                                 medicine[index].ratings.toString(),
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                            )
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              "${ConstString.mediPrice} : ",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium!
+                                  .copyWith(fontFamily: AppFont.fontMedium),
+                            ),
+                            Expanded(
+                              child: Text(
+                                medicine[index].medicinePrice.toString(),
                                 style: Theme.of(context).textTheme.titleMedium,
                               ),
                             )

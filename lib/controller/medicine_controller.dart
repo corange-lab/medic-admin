@@ -15,6 +15,7 @@ class MedicineController extends GetxController {
   TextEditingController categoryController = TextEditingController();
   TextEditingController medicineController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
   TextEditingController aboutController = TextEditingController();
   TextEditingController ratinsController = TextEditingController();
   TextEditingController brandController = TextEditingController();
@@ -28,6 +29,10 @@ class MedicineController extends GetxController {
   PickImageController pickImageController = Get.put(PickImageController());
 
   RxString preRequire = "Yes".obs;
+
+  RxString type = "".obs;
+
+  List<String> typeList = ["Popular", "Recommended"];
 
   final CollectionReference medicineRef =
       FirebaseFirestore.instance.collection('medicines');
@@ -57,10 +62,11 @@ class MedicineController extends GetxController {
       showInSnackBar("Please enter medicine description.",
           title: 'Required!', isSuccess: false);
       return false;
-    } else if (pickImageController.image == null) {
-      showInSnackBar("Please select medicine image");
-      return false;
     }
+    // else if (pickImageController.image == null) {
+    //   showInSnackBar("Please select medicine image");
+    //   return false;
+    // }
     return true;
   }
 
@@ -77,6 +83,15 @@ class MedicineController extends GetxController {
   }
 
   Stream<List<MedicineData>> fetchMedicine() {
+    var data = medicineRef.snapshots().map((event) {
+      return event.docs.map((e) {
+        return MedicineData.fromMap(e.data() as Map<String, dynamic>);
+      }).toList();
+    });
+    return data;
+  }
+
+  Stream<List<MedicineData>> fetchMedicines() {
     var data = medicineRef.snapshots().map((event) {
       return event.docs.map((e) {
         return MedicineData.fromMap(e.data() as Map<String, dynamic>);
@@ -302,7 +317,7 @@ class MedicineController extends GetxController {
           uses: row[11]?.value?.toString(),
           directionForUse: row[12]?.value?.toString(),
           safetyInformation: row[13]?.value?.toString(),
-          // prescriptionRequire: row[14]?.value,
+          medicinePrice: row[14]?.value,
         ));
       }
     }

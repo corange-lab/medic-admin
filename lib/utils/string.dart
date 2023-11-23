@@ -117,6 +117,7 @@ class ConstString {
   static const String orderDetails = "Order Details";
   static const String reminder = "Reminder";
   static const String prescription = "Prescription";
+  static const String type = "Type";
   static const String notification = "Notifications";
   static const String addAddress = "Add Address";
   static const String savedAddress = "Saved Address";
