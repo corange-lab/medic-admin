@@ -12,6 +12,7 @@ import 'package:medic_admin/model/medicine_data.dart';
 import 'package:medic_admin/screen/add_category.dart';
 import 'package:medic_admin/screen/add_medicine.dart';
 import 'package:medic_admin/screen/discount_screen.dart';
+import 'package:medic_admin/screen/orders_screen.dart';
 import 'package:medic_admin/screen/prescription_screen.dart';
 import 'package:medic_admin/screen/view_category.dart';
 import 'package:medic_admin/screen/view_medicine.dart';
@@ -79,6 +80,12 @@ class HomeScreen extends StatelessWidget {
                 },
                 leading: const Icon(Icons.view_agenda_outlined),
                 title: const Text("View Medicine")),
+            ListTile(
+                onTap: () {
+                  Get.to(() => OrderScreen());
+                },
+                leading: const Icon(Icons.list),
+                title: const Text("Orders")),
             ListTile(
                 onTap: () {
                   Get.to(() => PrescriptionScreen());

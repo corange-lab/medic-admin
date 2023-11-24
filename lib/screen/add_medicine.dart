@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:medic_admin/controller/medicine_controller.dart';
+import 'package:medic_admin/model/medicine_data.dart';
 import 'package:medic_admin/screen/medicine_add.dart';
 import 'package:medic_admin/theme/colors.dart';
 import 'package:medic_admin/utils/app_font.dart';

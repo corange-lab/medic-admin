@@ -19,6 +19,7 @@ class ConstString {
   static const String patient = "Patient";
   static const String orderNo = "Order No";
   static const String billDetail = "Bill Details";
+  static const String orderStatus = "Order Status";
   static const String orderItem = "Order Items";
   static const String cartValue = "Cart value";
   static const String shipping = "Shipping/Delivery Fee";

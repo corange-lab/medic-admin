@@ -42,6 +42,7 @@ class MedicineController extends GetxController {
   RxList<MedicineData> mediDataList = RxList<MedicineData>();
   RxList<CategoryData> categoryData = RxList<CategoryData>();
   RxList<String> columnHeader = RxList<String>();
+  RxList<String> columnHeader2 = RxList<String>();
 
   @override
   Future<void> onInit() async {
@@ -271,7 +272,8 @@ class MedicineController extends GetxController {
 
   Future<Uint8List?> pickFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.custom, allowedExtensions: ['xls', 'xlsx', 'ods']);
+        type: FileType.custom,
+        allowedExtensions: ['xls', 'xlsx', 'ods', 'xml', 'xlsm']);
 
     if (result != null) {
       return result.files.single.bytes;
@@ -317,7 +319,7 @@ class MedicineController extends GetxController {
           uses: row[11]?.value?.toString(),
           directionForUse: row[12]?.value?.toString(),
           safetyInformation: row[13]?.value?.toString(),
-          medicinePrice: row[14]?.value,
+          // medicinePrice: row[14]?.value,
         ));
       }
     }
@@ -341,11 +343,13 @@ class MedicineController extends GetxController {
       bool isHeaderRow = true;
       for (var row in excel.tables[table]!.rows) {
         if (isHeaderRow) {
-          columnHeader.value =
+          columnHeader2.value =
               row.map((cell) => cell?.value?.toString() ?? '').toList();
           isHeaderRow = false;
           continue;
         }
+        print(
+            'Row Data: ${row.map((cell) => cell?.value?.toString() ?? 'is').toList()}');
         categoryDataList.add(CategoryData(
             id: row[0]?.value?.toString(),
             name: row[1]?.value?.toString(),

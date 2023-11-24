@@ -79,7 +79,7 @@ class AddCategory extends StatelessWidget {
                     fontSize: 17,
                     color: AppColors.primaryColor),
               ));
-            } else if (controller.columnHeader.isEmpty) {
+            } else if (controller.columnHeader2.isEmpty) {
               return Center(
                   child: Text(
                 "No columns found in the loaded file. Please ensure the Excel file has headers.",
@@ -96,7 +96,7 @@ class AddCategory extends StatelessWidget {
                   columnSpacing: 15,
                   headingRowColor:
                       MaterialStateProperty.all(AppColors.tilePrimaryColor),
-                  columns: controller.columnHeader
+                  columns: controller.columnHeader2
                       .map((header) => DataColumn(
                               label: Text(
                             header,
@@ -109,7 +109,7 @@ class AddCategory extends StatelessWidget {
                   rows: controller.categoryData.map((categoryData) {
                     Map<String, dynamic> rowMap = categoryData.toMap();
                     return DataRow(
-                        cells: controller.columnHeader.map((header) {
+                        cells: controller.columnHeader2.map((header) {
                       return DataCell(Text(
                         rowMap[header]?.toString() ?? "N/A",
                         style: TextStyle(

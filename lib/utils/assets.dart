@@ -9,4 +9,7 @@ class AppIcons {
   static const String more = 'asset/icons/moreMedic.svg';
   static const String delete = 'asset/icons/deleteMedic.svg';
   static const String edit = 'asset/icons/edit.svg';
+  static const String other = 'asset/icons/other.svg';
+  static const String phone = 'asset/icons/phone.svg';
+  static const String pin = 'asset/icons/pin1.svg';
 }
