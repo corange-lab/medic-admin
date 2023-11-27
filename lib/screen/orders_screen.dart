@@ -58,7 +58,7 @@ class OrderScreen extends StatelessWidget {
                         margin:
                             EdgeInsets.symmetric(vertical: 10, horizontal: 5),
                         padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 15),
                         decoration: BoxDecoration(
                             color: AppColors.white,
                             borderRadius: BorderRadius.circular(10),
@@ -100,15 +100,15 @@ class OrderScreen extends StatelessWidget {
                                         } else if (snapshot.hasData) {
                                           String userName = snapshot.data!;
                                           return Text(
-                                            "${userName}",
+                                            userName,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .titleLarge!
                                                 .copyWith(
                                                     fontFamily:
                                                         AppFont.fontSemiBold,
-                                                    color:
-                                                        AppColors.primaryColor),
+                                                    color: AppColors
+                                                        .primaryColor),
                                           );
                                         } else {
                                           return Text(
@@ -119,8 +119,8 @@ class OrderScreen extends StatelessWidget {
                                                 .copyWith(
                                                     fontFamily:
                                                         AppFont.fontSemiBold,
-                                                    color:
-                                                        AppColors.primaryColor),
+                                                    color: AppColors
+                                                        .primaryColor),
                                           );
                                         }
                                       },
@@ -149,7 +149,8 @@ class OrderScreen extends StatelessWidget {
                                           .textTheme
                                           .titleLarge!
                                           .copyWith(
-                                              fontFamily: AppFont.fontSemiBold,
+                                              fontFamily:
+                                                  AppFont.fontSemiBold,
                                               color: AppColors.primaryColor),
                                     ),
                                   ],
@@ -171,12 +172,13 @@ class OrderScreen extends StatelessWidget {
                                       width: 10,
                                     ),
                                     Text(
-                                      "${DateFormat('d MMM yyyy hh:mm a').format(orders[index].orderDate!)}",
+                                      DateFormat('d MMM yyyy hh:mm a').format(orders[index].orderDate!),
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleLarge!
                                           .copyWith(
-                                              fontFamily: AppFont.fontSemiBold,
+                                              fontFamily:
+                                                  AppFont.fontSemiBold,
                                               color: AppColors.primaryColor),
                                     ),
                                   ],
@@ -213,7 +215,7 @@ class OrderScreen extends StatelessWidget {
                                 Row(
                                   children: [
                                     Text(
-                                      "Qty :",
+                                      "Status :",
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleMedium!
@@ -221,15 +223,16 @@ class OrderScreen extends StatelessWidget {
                                               fontFamily: AppFont.fontMedium),
                                     ),
                                     SizedBox(
-                                      width: 10,
+                                      width: 5,
                                     ),
                                     Text(
-                                      "${orders[index].quantity ?? 0}",
+                                      orders[index].orderStatus ?? "Pending",
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleLarge!
                                           .copyWith(
-                                              fontFamily: AppFont.fontSemiBold,
+                                              fontFamily:
+                                                  AppFont.fontSemiBold,
                                               color: AppColors.primaryColor),
                                     ),
                                   ],

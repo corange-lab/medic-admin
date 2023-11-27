@@ -42,11 +42,8 @@ class PrescriptionScreen extends StatelessWidget {
                 child: SizedBox(
               height: 35,
               width: 35,
-              child: LoadingIndicator(
-                colors: [AppColors.primaryColor],
-                indicatorType: Indicator.ballScale,
-                strokeWidth: 1,
-              ),
+              child: CupertinoActivityIndicator(
+                  color: AppColors.primaryColor, radius: 15),
             ));
           } else if (snapshot.hasError) {
             return Center(

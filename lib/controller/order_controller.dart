@@ -107,7 +107,7 @@ class OrderController extends GetxController {
 
   Future<void> updateOrderStatus(String orderId, String newStatus) async {
     await FirebaseFirestore.instance.collection('orders').doc(orderId).update({
-      'status': newStatus,
+      'orderStatus': newStatus,
     });
   }
 }
