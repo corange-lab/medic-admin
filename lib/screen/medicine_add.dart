@@ -44,6 +44,21 @@ class MedicineAdd extends StatelessWidget {
       controller.safetyInfoController.text = medicine?.safetyInformation ?? "";
       controller.preRequire.value =
           medicine!.prescriptionRequire! ? "Yes" : "No";
+    } else {
+      controller.medicineController.clear();
+      controller.brandController.clear();
+      controller.priceController.clear();
+      controller.descriptionController.clear();
+      controller.categoryController.clear();
+      controller.ratinsController.clear();
+      controller.usesController.clear();
+      controller.aboutController.clear();
+      controller.directionUseController.clear();
+      controller.benefitsController.clear();
+      controller.drugInterController.clear();
+      controller.safetyInfoController.clear();
+      controller.categoryIdController.clear();
+      controller.preRequire.value = "Yes";
     }
     return Scaffold(
       appBar: AppBar(
@@ -598,32 +613,42 @@ class MedicineAdd extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              Obx(() => Container(
-                    height: 40,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        color: AppColors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: AppColors.darkPrimaryColor)),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 10),
-                      child: DropdownButton<String?>(
-                        underline: const SizedBox(),
-                        value: controller.preRequire.value,
-                        onChanged: (newValue) {
-                          controller.preRequire.value = newValue!;
-                        },
-                        items: const [
-                          DropdownMenuItem<String?>(
-                            value: "Yes",
-                            child: Text("Yes"),
+
+              Obx(() => Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: AppColors.white,
+                          border: Border.all(color: AppColors.lineGrey),
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: DropdownButton<String?>(
+                          underline: const SizedBox(),
+                          value: controller.preRequire.value,
+                          borderRadius: BorderRadius.circular(10),
+                          dropdownColor: AppColors.white,
+                          icon: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: SvgPicture.asset(
+                              AppIcons.arrowDown,
+                              color: AppColors.primaryColor,
+                            ),
                           ),
-                          DropdownMenuItem<String?>(
-                            value: "No",
-                            child: Text("No"),
-                          )
-                        ],
+                          onChanged: (newValue) {
+                            controller.preRequire.value = newValue!;
+                          },
+                          items: const [
+                            DropdownMenuItem<String?>(
+                              value: "Yes",
+                              child: Text("Yes"),
+                            ),
+                            DropdownMenuItem<String?>(
+                              value: "No",
+                              child: Text("No"),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   )),

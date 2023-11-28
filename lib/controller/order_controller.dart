@@ -20,9 +20,9 @@ class OrderController extends GetxController {
     "Rejected",
     "Cancelled",
     "Refund",
-    "Inactive",
+    // "Inactive",
     "Return",
-    "Reorder"
+    // "Reorder"
   ].obs;
 
   final CollectionReference addRef =
