@@ -43,7 +43,19 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: AppColors.primaryColor,
         centerTitle: true,
       ),
-      body: Container(),
+      // body: Row(
+      //   children: [
+      //     ConstrainedBox(
+      //       constraints: BoxConstraints(maxWidth: 300),
+      //       child: PermanentDrawer(),
+      //     ),
+      //     Expanded(
+      //       child: Center(
+      //         child: Text('Main content area'),
+      //       ),
+      //     ),
+      //   ],
+      // ),
       drawer: Drawer(
         backgroundColor: AppColors.white,
         child: ListView(
@@ -106,6 +118,23 @@ class HomeScreen extends StatelessWidget {
                 title: const Text("Log Out")),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class PermanentDrawer extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      // Populate your drawer with items
+      child: ListView(
+        children: [
+          DrawerHeader(child: Text('Drawer Header')),
+          ListTile(title: Text('Item 1')),
+          ListTile(title: Text('Item 2')),
+          // Add other drawer items...
+        ],
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:loading_indicator/loading_indicator.dart';
@@ -10,6 +11,7 @@ import 'package:medic_admin/model/order_with_medicine.dart';
 import 'package:medic_admin/screen/order_details.dart';
 import 'package:medic_admin/theme/colors.dart';
 import 'package:medic_admin/utils/app_font.dart';
+import 'package:medic_admin/utils/assets.dart';
 import 'package:medic_admin/utils/string.dart';
 
 class OrderScreen extends StatelessWidget {
@@ -43,7 +45,7 @@ class OrderScreen extends StatelessWidget {
               color: AppColors.primaryColor,
               radius: 15,
             ));
-          } else if (snapshot.hasData) {
+          } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
             List<OrderData> orders = snapshot.data!;
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
@@ -107,8 +109,8 @@ class OrderScreen extends StatelessWidget {
                                                 .copyWith(
                                                     fontFamily:
                                                         AppFont.fontSemiBold,
-                                                    color: AppColors
-                                                        .primaryColor),
+                                                    color:
+                                                        AppColors.primaryColor),
                                           );
                                         } else {
                                           return Text(
@@ -119,8 +121,8 @@ class OrderScreen extends StatelessWidget {
                                                 .copyWith(
                                                     fontFamily:
                                                         AppFont.fontSemiBold,
-                                                    color: AppColors
-                                                        .primaryColor),
+                                                    color:
+                                                        AppColors.primaryColor),
                                           );
                                         }
                                       },
@@ -149,8 +151,7 @@ class OrderScreen extends StatelessWidget {
                                           .textTheme
                                           .titleLarge!
                                           .copyWith(
-                                              fontFamily:
-                                                  AppFont.fontSemiBold,
+                                              fontFamily: AppFont.fontSemiBold,
                                               color: AppColors.primaryColor),
                                     ),
                                   ],
@@ -172,13 +173,13 @@ class OrderScreen extends StatelessWidget {
                                       width: 10,
                                     ),
                                     Text(
-                                      DateFormat('d MMM yyyy hh:mm a').format(orders[index].orderDate!),
+                                      DateFormat('d MMM yyyy hh:mm a')
+                                          .format(orders[index].orderDate!),
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleLarge!
                                           .copyWith(
-                                              fontFamily:
-                                                  AppFont.fontSemiBold,
+                                              fontFamily: AppFont.fontSemiBold,
                                               color: AppColors.primaryColor),
                                     ),
                                   ],
@@ -231,8 +232,7 @@ class OrderScreen extends StatelessWidget {
                                           .textTheme
                                           .titleLarge!
                                           .copyWith(
-                                              fontFamily:
-                                                  AppFont.fontSemiBold,
+                                              fontFamily: AppFont.fontSemiBold,
                                               color: AppColors.primaryColor),
                                     ),
                                   ],
@@ -246,7 +246,27 @@ class OrderScreen extends StatelessWidget {
               ),
             );
           } else {
-            return Center(child: Text("No Order Found"));
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(AppImages.emptyBin),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      ConstString.noOrder,
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleMedium!
+                          .copyWith(fontSize: 15, color: AppColors.skipGrey),
+                    )
+                  ],
+                ),
+              ),
+            );
           }
         },
       ),

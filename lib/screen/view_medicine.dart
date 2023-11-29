@@ -378,12 +378,27 @@ class ViewMedicine extends StatelessWidget {
                     iconColor: AppColors.primaryColor,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
-                    title: Text(
-                      medicine[index].genericName ?? "Unknown Medicine",
-                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                          fontFamily: AppFont.fontBold,
-                          fontSize: 17,
-                          color: AppColors.primaryColor),
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          medicine[index].genericName ?? "Unknown Medicine",
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium!
+                              .copyWith(
+                                  fontFamily: AppFont.fontBold,
+                                  fontSize: 17,
+                                  color: AppColors.primaryColor),
+                        ),
+                        Text(
+                          "Price : LE ${medicine[index].medicinePrice.toString()}",
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium!
+                              .copyWith(fontFamily: AppFont.fontMedium),
+                        )
+                      ],
                     ),
                     children: [
                       // Place your details here inside the children of ExpansionTile
@@ -403,8 +418,6 @@ class ViewMedicine extends StatelessWidget {
                           medicine[index].safetyInformation),
                       medicineDetailTile(context, "Reviews:",
                           medicine[index].ratings.toString()),
-                      medicineDetailTile(context, "Price:",
-                          medicine[index].medicinePrice.toString()),
                       medicineDetailTile(
                           context, "Description:", medicine[index].description),
                       Padding(
@@ -434,7 +447,7 @@ class ViewMedicine extends StatelessWidget {
                                         color: Colors.white,
                                       ),
                                 )),
-                            SizedBox(
+                            const SizedBox(
                               width: 15,
                             ),
                             ElevatedButton(

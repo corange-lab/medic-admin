@@ -7,6 +7,7 @@ class ConstString {
   static const String save = "Save";
   static const String resendOTP = "Resend OTP";
   static const String saveDetails = "Save details";
+  static const String applyStatus = "Apply Status";
   static const String completed = "Completed";
   static const String reorder = "Reorder";
   static const String cancle = "Cancel";
@@ -21,6 +22,7 @@ class ConstString {
   static const String billDetail = "Bill Details";
   static const String orderStatus = "Order Status";
   static const String orderItem = "Order Items";
+  static const String quantity = "Quantity";
   static const String cartValue = "Cart value";
   static const String shipping = "Shipping/Delivery Fee";
   static const String total = "Total";
@@ -213,6 +215,7 @@ class ConstString {
   static const String enterValidPostCode = "Please enter valid postcode";
   static const String chooseImage = "Please choose image";
   static const String noMoreReaction = "No More Reaction";
+  static const String noOrder = "No Order Found";
   static const String noMoreTopic = "Topick has expired";
   static const String noProfileUploaded = "No Profile Image Uploaded";
   static const String newTopickComingSoon = "New Topick coming soon.";

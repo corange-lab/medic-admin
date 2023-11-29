@@ -27,6 +27,8 @@ class OrderDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<String> medicineIdList = orderData!.medicineId.values.toList();
+    List<int> medicineQuantityList = controller.getQuantitiesList(
+        medicineIdList, orderData!.medicineQuantities!);
     controller.orderStatus.value = orderData?.orderStatus ?? "Placed";
     return Scaffold(
       backgroundColor: Colors.white,
@@ -129,11 +131,28 @@ class OrderDetails extends StatelessWidget {
                 ),
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: Text(
-                    ConstString.orderItem,
-                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                        color: AppColors.darkPrimaryColor,
-                        fontFamily: AppFont.fontBold),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        ConstString.orderItem,
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium!
+                            .copyWith(
+                                color: AppColors.darkPrimaryColor,
+                                fontFamily: AppFont.fontBold),
+                      ),
+                      Text(
+                        ConstString.quantity,
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium!
+                            .copyWith(
+                                color: AppColors.darkPrimaryColor,
+                                fontFamily: AppFont.fontBold),
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(
@@ -153,14 +172,28 @@ class OrderDetails extends StatelessWidget {
                         itemBuilder: (context, index) {
                           return Padding(
                             padding: const EdgeInsets.symmetric(vertical: 8),
-                            child: Text(
-                              "${medicineNames[index]}",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleLarge!
-                                  .copyWith(
-                                      color: AppColors.primaryColor,
-                                      fontFamily: AppFont.fontSemiBold),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "${medicineNames[index]}",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge!
+                                      .copyWith(
+                                          color: AppColors.primaryColor,
+                                          fontFamily: AppFont.fontSemiBold),
+                                ),
+                                Text(
+                                  "${medicineQuantityList[index]}",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge!
+                                      .copyWith(
+                                          color: AppColors.primaryColor,
+                                          fontFamily: AppFont.fontSemiBold),
+                                ),
+                              ],
                             ),
                           );
                         },
@@ -260,88 +293,91 @@ class OrderDetails extends StatelessWidget {
                 ),
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: Obx(() => Container(
-                        decoration: BoxDecoration(
-                            color: AppColors.white,
-                            border: Border.all(color: AppColors.lineGrey),
-                            borderRadius: BorderRadius.circular(10)),
-                        child: DropdownButton(
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleSmall!
-                              .copyWith(fontSize: 15),
-                          hint: Text(
-                            "Select Order Status",
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleSmall!
-                                .copyWith(
-                                    fontSize: 15, color: AppColors.txtGrey),
-                          ),
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          icon: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: SvgPicture.asset(
-                              AppIcons.arrowDown,
-                              color: AppColors.primaryColor,
+                  child: Obx(() => Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                                color: AppColors.white,
+                                border: Border.all(color: AppColors.lineGrey),
+                                borderRadius: BorderRadius.circular(10)),
+                            child: DropdownButton(
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall!
+                                  .copyWith(fontSize: 15),
+                              hint: Text(
+                                "Select Order Status",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall!
+                                    .copyWith(
+                                        fontSize: 15, color: AppColors.txtGrey),
+                              ),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              icon: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: SvgPicture.asset(
+                                  AppIcons.arrowDown,
+                                  color: AppColors.primaryColor,
+                                ),
+                              ),
+                              underline: const SizedBox(),
+                              borderRadius: BorderRadius.circular(10),
+                              dropdownColor: AppColors.white,
+                              onChanged: (String? newValue) {
+                                if (newValue != null) {
+                                  controller.orderStatus.value = newValue;
+                                }
+                              },
+                              items: controller.orderStatusList.isNotEmpty
+                                  ? controller.orderStatusList
+                                      .map((String items) {
+                                      return DropdownMenuItem(
+                                        value: items,
+                                        child: Text(
+                                          items,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleMedium!
+                                              .copyWith(fontSize: 15),
+                                        ),
+                                      );
+                                    }).toList()
+                                  : null,
+                              value: controller.orderStatusList
+                                      .contains(controller.orderStatus.value)
+                                  ? controller.orderStatus.value
+                                  : null,
                             ),
                           ),
-                          underline: const SizedBox(),
-                          borderRadius: BorderRadius.circular(10),
-                          dropdownColor: AppColors.white,
-                          onChanged: (String? newValue) {
-                            if (newValue != null) {
-                              controller.updateOrderStatus(
-                                  orderData!.id!, newValue);
-                              controller.orderStatus.value = newValue;
-                            }
-                          },
-                          items: controller.orderStatusList.isNotEmpty
-                              ? controller.orderStatusList.map((String items) {
-                                  return DropdownMenuItem(
-                                    value: items,
-                                    child: Text(
-                                      items,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium!
-                                          .copyWith(fontSize: 15),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          ElevatedButton(
+                              onPressed: () {
+                                controller.updateOrderStatus(orderData!.id!,
+                                    controller.orderStatus.value);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.primaryColor,
+                                  fixedSize: const Size(130, 40),
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10))),
+                              child: Text(
+                                ConstString.applyStatus,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displayMedium!
+                                    .copyWith(
+                                      color: Colors.white,
                                     ),
-                                  );
-                                }).toList()
-                              : null,
-                          value: controller.orderStatusList
-                                  .contains(controller.orderStatus.value)
-                              ? controller.orderStatus.value
-                              : null,
-                        ),
+                              ))
+                        ],
                       )),
                 ),
-                // Obx(() => DropdownButton<String>(
-                //       dropdownColor: AppColors.white,
-                //       style: Theme.of(context).textTheme.titleMedium,
-                //       value: controller.orderStatus.value,
-                //       onChanged: (String? newValue) {
-                //         if (newValue != null) {
-                //           controller.updateOrderStatus(
-                //               orderData!.id!, newValue);
-                //           controller.orderStatus.value = newValue;
-                //         }
-                //       },
-                //       items: controller.orderStatusList
-                //           .map<DropdownMenuItem<String>>((String value) {
-                //         return DropdownMenuItem<String>(
-                //           value: value,
-                //           child: Text(
-                //             value,
-                //             style: Theme.of(context)
-                //                 .textTheme
-                //                 .titleMedium!
-                //                 .copyWith(color: AppColors.primaryColor),
-                //           ),
-                //         );
-                //       }).toList(),
-                //     )),
                 const SizedBox(
                   height: 20,
                 ),
@@ -358,7 +394,7 @@ class OrderDetails extends StatelessWidget {
                   height: 15,
                 ),
                 Container(
-                  height: 200,
+                  height: 250,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(color: AppColors.lineGrey)),
@@ -383,6 +419,36 @@ class OrderDetails extends StatelessWidget {
                               ),
                               Text(
                                 "${orderData?.quantity ?? 1} Item",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall!
+                                    .copyWith(
+                                        color: AppColors.darkPrimaryColor,
+                                        fontFamily: AppFont.fontMedium,
+                                        fontSize: 13),
+                              ),
+                            ],
+                          ),
+                          Divider(
+                            height: 10,
+                            color: AppColors.lineGrey,
+                            thickness: 1,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                ConstString.cartValue,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall!
+                                    .copyWith(
+                                        color: AppColors.txtGrey,
+                                        fontFamily: AppFont.fontMedium,
+                                        fontSize: 13),
+                              ),
+                              Text(
+                                "LE ${orderData!.subTotal ?? 0}",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleSmall!

@@ -62,6 +62,11 @@ class OrderController extends GetxController {
     return genericNames;
   }
 
+  List<int> getQuantitiesList(
+      List<String> medicineIds, Map<String, int> medicineQuantities) {
+    return medicineIds.map((id) => medicineQuantities[id] ?? 0).toList();
+  }
+
   Stream<UserModel?> fetchUserById(String userid) {
     return userRef.doc(userid).snapshots().map((snapshot) {
       if (snapshot.exists && snapshot.data() != null) {
