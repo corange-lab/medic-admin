@@ -57,19 +57,19 @@ class OrderScreen extends StatelessWidget {
                       Get.to(() => OrderDetails(orders[index]));
                     },
                     child: Container(
-                        margin:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 5),
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 5),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 15),
                         decoration: BoxDecoration(
                             color: AppColors.white,
                             borderRadius: BorderRadius.circular(10),
                             boxShadow: [
                               BoxShadow(
-                                  blurRadius: 1,
-                                  spreadRadius: 1,
-                                  offset: Offset(1, 2),
-                                  color: AppColors.txtGrey.withOpacity(0.4))
+                                  blurRadius: 2,
+                                  spreadRadius: 2,
+                                  offset: const Offset(1, 3),
+                                  color: AppColors.txtGrey.withOpacity(0.2))
                             ]),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -87,7 +87,7 @@ class OrderScreen extends StatelessWidget {
                                           .copyWith(
                                               fontFamily: AppFont.fontMedium),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 10,
                                     ),
                                     StreamBuilder(
@@ -96,7 +96,7 @@ class OrderScreen extends StatelessWidget {
                                       builder: (context, snapshot) {
                                         if (snapshot.connectionState ==
                                             ConnectionState.waiting) {
-                                          return Center(
+                                          return const Center(
                                               child:
                                                   CupertinoActivityIndicator());
                                         } else if (snapshot.hasData) {
@@ -129,7 +129,7 @@ class OrderScreen extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 Row(
@@ -142,7 +142,7 @@ class OrderScreen extends StatelessWidget {
                                           .copyWith(
                                               fontFamily: AppFont.fontMedium),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 10,
                                     ),
                                     Text(
@@ -156,7 +156,7 @@ class OrderScreen extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 Row(
@@ -169,7 +169,7 @@ class OrderScreen extends StatelessWidget {
                                           .copyWith(
                                               fontFamily: AppFont.fontMedium),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 10,
                                     ),
                                     Text(
@@ -197,7 +197,7 @@ class OrderScreen extends StatelessWidget {
                                       .copyWith(
                                           fontFamily: AppFont.fontSemiBold),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 Text(
@@ -210,7 +210,7 @@ class OrderScreen extends StatelessWidget {
                                           fontFamily: AppFont.fontSemiBold,
                                           color: AppColors.primaryColor),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 Row(
@@ -223,7 +223,7 @@ class OrderScreen extends StatelessWidget {
                                           .copyWith(
                                               fontFamily: AppFont.fontMedium),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 5,
                                     ),
                                     Text(
@@ -248,7 +248,8 @@ class OrderScreen extends StatelessWidget {
           } else {
             return Center(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

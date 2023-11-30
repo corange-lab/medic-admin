@@ -14,6 +14,7 @@ import 'package:medic_admin/theme/colors.dart';
 import 'package:medic_admin/utils/app_font.dart';
 import 'package:medic_admin/utils/assets.dart';
 import 'package:medic_admin/utils/string.dart';
+import 'package:medic_admin/utils/utils.dart';
 
 class OrderDetails extends StatelessWidget {
   OrderController controller = Get.put(OrderController());
@@ -352,13 +353,18 @@ class OrderDetails extends StatelessWidget {
                                   : null,
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 10,
                           ),
                           ElevatedButton(
                               onPressed: () {
-                                controller.updateOrderStatus(orderData!.id!,
-                                    controller.orderStatus.value);
+                                controller
+                                    .updateOrderStatus(orderData!.id!,
+                                        controller.orderStatus.value)
+                                    .then((value) {
+                                  showInSnackBar("Status Applied Successfully",
+                                      isSuccess: true, title: "The Medic");
+                                });
                               },
                               style: ElevatedButton.styleFrom(
                                   backgroundColor: AppColors.primaryColor,
