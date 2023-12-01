@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -20,6 +21,7 @@ class MedicineController extends GetxController {
   TextEditingController ratinsController = TextEditingController();
   TextEditingController brandController = TextEditingController();
   TextEditingController categoryIdController = TextEditingController();
+  TextEditingController discountIdController = TextEditingController();
   TextEditingController directionUseController = TextEditingController();
   TextEditingController drugInterController = TextEditingController();
   TextEditingController safetyInfoController = TextEditingController();
@@ -63,11 +65,14 @@ class MedicineController extends GetxController {
       showInSnackBar("Please enter medicine description.",
           title: 'Required!', isSuccess: false);
       return false;
+    } else if (priceController.text.trim().isEmpty) {
+      showInSnackBar("Please enter medicine price.",
+          title: 'Required!', isSuccess: false);
+      return false;
+    } else if (pickImageController.image == null) {
+      showInSnackBar("Please select medicine image");
+      return false;
     }
-    // else if (pickImageController.image == null) {
-    //   showInSnackBar("Please select medicine image");
-    //   return false;
-    // }
     return true;
   }
 
@@ -81,6 +86,22 @@ class MedicineController extends GetxController {
       return false;
     }
     return true;
+  }
+
+  clearController() {
+    medicineController.clear();
+    descriptionController.clear();
+    priceController.clear();
+    aboutController.clear();
+    ratinsController.clear();
+    brandController.clear();
+    categoryIdController.clear();
+    discountIdController.clear();
+    directionUseController.clear();
+    drugInterController.clear();
+    safetyInfoController.clear();
+    usesController.clear();
+    benefitsController.clear();
   }
 
   Stream<List<MedicineData>> fetchMedicine() {
@@ -121,7 +142,7 @@ class MedicineController extends GetxController {
       showInSnackBar("Medicine Data Deleted Successfully!",
           isSuccess: true, title: "The Medic");
     }).onError((error, stackTrace) {
-      showInSnackBar("Error : ${error}");
+      showInSnackBar("Error : $error");
     });
   }
 
@@ -133,7 +154,7 @@ class MedicineController extends GetxController {
       showInSnackBar("Category Data Deleted Successfully!",
           isSuccess: true, title: "The Medic");
     }).onError((error, stackTrace) {
-      showInSnackBar("Error : ${error}");
+      showInSnackBar("Error : $error");
     });
   }
 
@@ -143,19 +164,9 @@ class MedicineController extends GetxController {
     await medicineDoc.update(medicine.toMap()).then((value) {
       Get.back();
       showInSnackBar("Medicine Data Updated Successfully!", isSuccess: true);
-      medicineController.clear();
-      brandController.clear();
-      descriptionController.clear();
-      categoryIdController.clear();
-      ratinsController.clear();
-      usesController.clear();
-      aboutController.clear();
-      directionUseController.clear();
-      benefitsController.clear();
-      drugInterController.clear();
-      safetyInfoController.clear();
+      clearController();
     }).onError((error, stackTrace) {
-      showInSnackBar("Error : ${error}");
+      showInSnackBar("Error : $error");
     });
   }
 
@@ -167,7 +178,7 @@ class MedicineController extends GetxController {
       showInSnackBar("Category Data Updated Successfully!", isSuccess: true);
       categoryController.clear();
     }).onError((error, stackTrace) {
-      showInSnackBar("Error : ${error}");
+      showInSnackBar("Error : $error");
     });
   }
 
@@ -214,19 +225,9 @@ class MedicineController extends GetxController {
       Get.back();
       showInSnackBar("Medicine Added Successfully",
           isSuccess: true, title: "The Medic");
-      medicineController.clear();
-      brandController.clear();
-      descriptionController.clear();
-      categoryIdController.clear();
-      ratinsController.clear();
-      usesController.clear();
-      aboutController.clear();
-      directionUseController.clear();
-      benefitsController.clear();
-      drugInterController.clear();
-      safetyInfoController.clear();
+      clearController();
     }).catchError((error) {
-      print("Error : ${error}");
+      print("Error : $error");
     });
   }
 
@@ -237,7 +238,7 @@ class MedicineController extends GetxController {
           isSuccess: true, title: "The Medic");
       categoryController.clear();
     }).catchError((error) {
-      print("Error : ${error}");
+      print("Error : $error");
     });
   }
 
@@ -293,6 +294,7 @@ class MedicineController extends GetxController {
 
     // ByteData data = await rootBundle.load("asset/medicineExcel.xlsx");
     // var bytes = excelFile.readAsBytesSync();
+
     var excel = Excel.decodeBytes(bytes);
 
     for (var table in excel.tables.keys) {
@@ -304,27 +306,62 @@ class MedicineController extends GetxController {
           isHeaderRow = false;
           continue;
         }
+
         medicineDataList.add(MedicineData(
-          id: row[0]?.value?.toString(),
-          about: row[1]?.value?.toString(),
-          brandName: row[2]?.value?.toString(),
-          categoryId: row[3]?.value?.toString(),
-          drugDrugInteractions: row[4]?.value?.toString(),
-          image: row[5]?.value?.toString(),
-          placeholderImage: row[6]?.value?.toString(),
-          ratings: row[7]?.value?.toString(),
-          genericName: row[8]?.value?.toString(),
-          description: row[9]?.value?.toString(),
-          benefits: row[10]?.value?.toString(),
-          uses: row[11]?.value?.toString(),
-          directionForUse: row[12]?.value?.toString(),
-          safetyInformation: row[13]?.value?.toString(),
-          // medicinePrice: row[14]?.value,
+          id: row.isNotEmpty ? _parseString(row[0]?.value) : "",
+          about: row.length > 1 ? _parseString(row[1]?.value) : "",
+          brandName: row.length > 2 ? _parseString(row[2]?.value) : "",
+          genericName: row.length > 3 ? _parseString(row[3]?.value) : "",
+          medicinePrice: row.length > 4 ? _parseInt(row[4]?.value) : 0,
+          quantity: row.length > 5 ? _parseInt(row[5]?.value) : 0,
+          image: row.length > 6 ? _parseString(row[6]?.value) : "",
+          placeholderImage: row.length > 7 ? _parseString(row[7]?.value) : "",
+          categoryId: row.length > 8 ? _parseString(row[8]?.value) : "",
+          discountId: row.length > 9 ? _parseString(row[9]?.value) : "",
+          drugDrugInteractions:
+              row.length > 10 ? _parseString(row[10]?.value) : "",
+          ratings: row.length > 11 ? _parseString(row[11]?.value) : "",
+          description: row.length > 12 ? _parseString(row[12]?.value) : "",
+          benefits: row.length > 13 ? _parseString(row[13]?.value) : "",
+          uses: row.length > 14 ? _parseString(row[14]?.value) : "",
+          directionForUse: row.length > 15 ? _parseString(row[15]?.value) : "",
+          safetyInformation:
+              row.length > 16 ? _parseString(row[16]?.value) : "",
+          prescriptionRequire:
+              row.length > 17 ? _parseBool(row[17]?.value) : false,
+          type: row.length > 18 ? _parseString(row[18]?.value) : "",
         ));
       }
     }
     mediDataList.value = medicineDataList;
   }
+
+  int _parseInt(dynamic value) {
+    if (value is String) {
+      return int.tryParse(value) ?? 0;
+    } else if (value is int) {
+      return value;
+    }
+    return 0;
+  }
+
+  String _parseString(dynamic value) {
+    return value?.toString() ?? "";
+  }
+
+  bool _parseBool(dynamic value) {
+    if (value is String) {
+      return value.toLowerCase() == 'true';
+    } else if (value is bool) {
+      return value;
+    }
+    return false;
+  }
+
+  // bool _parseBool(dynamic value) {
+  //   if (value == null) return false;
+  //   return value.toLowerCase() == 'yes';
+  // }
 
   importCategoryData() async {
     List<CategoryData> categoryDataList = [];

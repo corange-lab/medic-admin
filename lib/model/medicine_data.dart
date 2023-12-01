@@ -10,6 +10,7 @@ class MedicineData {
   String? placeholderImage;
   String? ratings;
   String? genericName;
+  String? discountId;
   String? description;
   String? benefits;
   String? uses;
@@ -25,6 +26,7 @@ class MedicineData {
     this.about,
     this.brandName,
     this.categoryId,
+    this.discountId,
     this.drugDrugInteractions,
     this.image,
     this.placeholderImage,
@@ -46,6 +48,7 @@ class MedicineData {
     String? about,
     String? brandName,
     String? categoryId,
+    String? discountId,
     String? drugDrugInteractions,
     String? image,
     String? placeholderImage,
@@ -66,6 +69,7 @@ class MedicineData {
       about: about ?? this.about,
       brandName: brandName ?? this.brandName,
       categoryId: categoryId ?? this.categoryId,
+      discountId: discountId ?? this.discountId,
       drugDrugInteractions: drugDrugInteractions ?? this.drugDrugInteractions,
       image: image ?? this.image,
       placeholderImage: placeholderImage ?? this.placeholderImage,
@@ -85,24 +89,25 @@ class MedicineData {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'about': about,
-      'brandName': brandName,
-      'categoryId': categoryId,
-      'drugDrugInteractions': drugDrugInteractions,
-      'image': image,
-      'placeholderImage': placeholderImage,
-      'ratings': ratings,
-      'genericName': genericName,
-      'description': description,
-      'benefits': benefits,
-      'uses': uses,
-      'directionForUse': directionForUse,
-      'safetyInformation': safetyInformation,
-      'quantity': quantity,
-      'medicinePrice': medicinePrice,
-      'prescriptionRequire': prescriptionRequire,
-      'type': type,
+      'id': id ?? "",
+      'about': about ?? "",
+      'brandName': brandName ?? "",
+      'categoryId': categoryId ?? "",
+      'discountId': discountId ?? "",
+      'drugDrugInteractions': drugDrugInteractions ?? "",
+      'image': image ?? "",
+      'placeholderImage': placeholderImage ?? "",
+      'ratings': ratings ?? "",
+      'genericName': genericName ?? "",
+      'description': description ?? "",
+      'benefits': benefits ?? "",
+      'uses': uses ?? "",
+      'directionForUse': directionForUse ?? "",
+      'safetyInformation': safetyInformation ?? "",
+      'quantity': quantity ?? 0,
+      'medicinePrice': medicinePrice ?? 0,
+      'prescriptionRequire': prescriptionRequire ?? false,
+      'type': type ?? "",
     };
   }
 
@@ -112,6 +117,7 @@ class MedicineData {
       about: map['about'],
       brandName: map['brandName'],
       categoryId: map['categoryId'],
+      discountId: map['discountId'],
       drugDrugInteractions: map['drugDrugInteractions'],
       image: map['image'],
       placeholderImage: map['placeholderImage'],

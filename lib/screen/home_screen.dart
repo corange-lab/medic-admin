@@ -11,6 +11,7 @@ import 'package:medic_admin/model/category_data.dart';
 import 'package:medic_admin/model/medicine_data.dart';
 import 'package:medic_admin/screen/add_category.dart';
 import 'package:medic_admin/screen/add_medicine.dart';
+import 'package:medic_admin/screen/category_add.dart';
 import 'package:medic_admin/screen/discount_screen.dart';
 import 'package:medic_admin/screen/orders_screen.dart';
 import 'package:medic_admin/screen/prescription_screen.dart';
@@ -70,7 +71,7 @@ class HomeScreen extends StatelessWidget {
             ),
             ListTile(
                 onTap: () {
-                  Get.to(() => AddCategory());
+                  Get.to(() => CategoryAdd());
                 },
                 leading: const Icon(Icons.add),
                 title: const Text("Add Category")),

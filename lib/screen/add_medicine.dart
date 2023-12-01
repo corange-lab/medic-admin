@@ -10,6 +10,8 @@ import 'package:medic_admin/utils/string.dart';
 class AddMedicine extends StatelessWidget {
   MedicineController controller = Get.put(MedicineController());
 
+  ScrollController scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,8 +90,9 @@ class AddMedicine extends StatelessWidget {
                     color: AppColors.primaryColor),
               ));
             } else {
-              return SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
+              return SizedBox(
+                height: double.infinity,
+                width: double.infinity,
                 child: DataTable(
                   clipBehavior: Clip.antiAliasWithSaveLayer,
                   columnSpacing: 15,

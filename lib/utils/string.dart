@@ -65,6 +65,7 @@ class ConstString {
   static const String enterGen = "Enter Generic Name";
   static const String enterPre = "Enter Prescription require or not";
   static const String enterCategory = "Enter Category Id";
+  static const String enterDiscount = "Enter Discount Id";
   static const String price = "Enter Price";
   static const String enterRate = "Enter Medicine Ratings";
   static const String enterDecsription = "Enter description";
@@ -86,6 +87,7 @@ class ConstString {
       "Your account has been verified successfully ";
 
   static const String medicineCategory = "Medicines Categories";
+  static const String medicineDiscount = "Medicines Discount";
   static const String viewAll = "View all";
   static const String popularMedicine = "Popular Medicines";
   static const String orderPlacement = "Order Placement";
