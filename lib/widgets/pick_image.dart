@@ -21,9 +21,8 @@ import 'package:path/path.dart' as path;
 final ImagePicker _picker = ImagePicker();
 
 class PickImageController extends GetxController {
-
-  XFile? image;
-  XFile? categoryImage;
+  Rx<XFile?> image = Rx<XFile?>(null);
+  Rx<XFile?> categoryImage = Rx<XFile?>(null);
 
   Future<XFile?> pickImage() async {
     return await _picker.pickImage(source: ImageSource.gallery);
@@ -36,7 +35,7 @@ class PickImageController extends GetxController {
     String fileExtension = path.extension(image.name);
 
     // Ensure the file is an image
-    if (!['.png', '.jpg', '.jpeg', '.gif','.avif','.svg']
+    if (!['.png', '.jpg', '.jpeg', '.gif', '.avif', '.svg']
         .contains(fileExtension.toLowerCase())) {
       print('The selected file is not an image.');
       return null;
@@ -63,5 +62,3 @@ class PickImageController extends GetxController {
     }
   }
 }
-//https://img.freepik.com/free-vector/isometric-gastroenterology-composition-with-view-medication-with-tubes-pills-illustration_1284-63536.jpg?size=626&ext=jpg&ga=GA1.1.515127885.1687976465&semt=ais
-//https://img.freepik.com/premium-vector/various-medicines-capsules-pills-bottles-with-drugs_267448-246.jpg?size=626&ext=jpg&ga=GA1.1.515127885.1687976465&semt=ais

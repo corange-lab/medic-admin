@@ -23,254 +23,238 @@ class OrderScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      appBar: AppBar(
-        centerTitle: true,
-        backgroundColor: AppColors.primaryColor,
-        title: Text(
-          "Orders",
-          style: Theme.of(context).textTheme.titleMedium!.copyWith(
-              color: Colors.white,
-              fontSize: 16,
-              fontFamily: AppFont.fontMedium),
-        ),
-      ),
-      body: StreamBuilder(
-        stream: controller.fetchOrders(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-                child: CupertinoActivityIndicator(
-              color: AppColors.primaryColor,
-              radius: 15,
-            ));
-          } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-            List<OrderData> orders = snapshot.data!;
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
-              child: ListView.builder(
-                itemCount: orders.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      Get.to(() => OrderDetails(orders[index]));
-                    },
-                    child: Container(
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 5),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 15),
-                        decoration: BoxDecoration(
-                            color: AppColors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(
-                                  blurRadius: 2,
-                                  spreadRadius: 2,
-                                  offset: const Offset(1, 3),
-                                  color: AppColors.txtGrey.withOpacity(0.2))
-                            ]),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Customer Name:",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium!
-                                          .copyWith(
-                                              fontFamily: AppFont.fontMedium),
-                                    ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    StreamBuilder(
-                                      stream: controller.fetchUsernameFromId(
-                                          orders[index].creatorId!),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.waiting) {
-                                          return const Center(
-                                              child:
-                                                  CupertinoActivityIndicator());
-                                        } else if (snapshot.hasData) {
-                                          String userName = snapshot.data!;
-                                          return Text(
-                                            userName,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .titleLarge!
-                                                .copyWith(
-                                                    fontFamily:
-                                                        AppFont.fontSemiBold,
-                                                    color:
-                                                        AppColors.primaryColor),
-                                          );
-                                        } else {
-                                          return Text(
-                                            "Medic User",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .titleLarge!
-                                                .copyWith(
-                                                    fontFamily:
-                                                        AppFont.fontSemiBold,
-                                                    color:
-                                                        AppColors.primaryColor),
-                                          );
-                                        }
-                                      },
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Order No:",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium!
-                                          .copyWith(
-                                              fontFamily: AppFont.fontMedium),
-                                    ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    Text(
-                                      "${orders[index].id}",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleLarge!
-                                          .copyWith(
-                                              fontFamily: AppFont.fontSemiBold,
-                                              color: AppColors.primaryColor),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Order Date:",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium!
-                                          .copyWith(
-                                              fontFamily: AppFont.fontMedium),
-                                    ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    Text(
-                                      DateFormat('d MMM yyyy hh:mm a')
-                                          .format(orders[index].orderDate!),
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleLarge!
-                                          .copyWith(
-                                              fontFamily: AppFont.fontSemiBold,
-                                              color: AppColors.primaryColor),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  "SLL",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleLarge!
-                                      .copyWith(
-                                          fontFamily: AppFont.fontSemiBold),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Text(
-                                  "${orders[index].totalAmount ?? 0}",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleLarge!
-                                      .copyWith(
-                                          fontSize: 20,
-                                          fontFamily: AppFont.fontSemiBold,
-                                          color: AppColors.primaryColor),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Status :",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium!
-                                          .copyWith(
-                                              fontFamily: AppFont.fontMedium),
-                                    ),
-                                    const SizedBox(
-                                      width: 5,
-                                    ),
-                                    Text(
-                                      orders[index].orderStatus ?? "Pending",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleLarge!
-                                          .copyWith(
-                                              fontFamily: AppFont.fontSemiBold,
-                                              color: AppColors.primaryColor),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            )
-                          ],
-                        )),
-                  );
-                },
+    return StreamBuilder(
+      stream: controller.fetchOrders(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+              child: CupertinoActivityIndicator(
+            color: AppColors.primaryColor,
+            radius: 15,
+          ));
+        } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+          List<OrderData> orders = snapshot.data!;
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+            child: ListView.builder(
+              itemCount: orders.length,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () {
+                    Get.to(() => OrderDetails(orders[index]));
+                  },
+                  child: Container(
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 5),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 15),
+                      decoration: BoxDecoration(
+                          color: AppColors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                                blurRadius: 2,
+                                spreadRadius: 2,
+                                offset: const Offset(1, 3),
+                                color: AppColors.txtGrey.withOpacity(0.2))
+                          ]),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    "Customer Name:",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium!
+                                        .copyWith(
+                                            fontFamily: AppFont.fontMedium),
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  StreamBuilder(
+                                    stream: controller.fetchUsernameFromId(
+                                        orders[index].creatorId!),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return const Center(
+                                            child:
+                                                CupertinoActivityIndicator());
+                                      } else if (snapshot.hasData) {
+                                        String userName = snapshot.data!;
+                                        return Text(
+                                          userName,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleLarge!
+                                              .copyWith(
+                                                  fontFamily:
+                                                      AppFont.fontSemiBold,
+                                                  color:
+                                                      AppColors.primaryColor),
+                                        );
+                                      } else {
+                                        return Text(
+                                          "Medic User",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleLarge!
+                                              .copyWith(
+                                                  fontFamily:
+                                                      AppFont.fontSemiBold,
+                                                  color:
+                                                      AppColors.primaryColor),
+                                        );
+                                      }
+                                    },
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "Order No:",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium!
+                                        .copyWith(
+                                            fontFamily: AppFont.fontMedium),
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    "${orders[index].id}",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleLarge!
+                                        .copyWith(
+                                            fontFamily: AppFont.fontSemiBold,
+                                            color: AppColors.primaryColor),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "Order Date:",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium!
+                                        .copyWith(
+                                            fontFamily: AppFont.fontMedium),
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    DateFormat('d MMM yyyy hh:mm a')
+                                        .format(orders[index].orderDate!),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleLarge!
+                                        .copyWith(
+                                            fontFamily: AppFont.fontSemiBold,
+                                            color: AppColors.primaryColor),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                "SLL",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleLarge!
+                                    .copyWith(fontFamily: AppFont.fontSemiBold),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                "${orders[index].totalAmount ?? 0}",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleLarge!
+                                    .copyWith(
+                                        fontSize: 20,
+                                        fontFamily: AppFont.fontSemiBold,
+                                        color: AppColors.primaryColor),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "Status :",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium!
+                                        .copyWith(
+                                            fontFamily: AppFont.fontMedium),
+                                  ),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    orders[index].orderStatus ?? "Pending",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleLarge!
+                                        .copyWith(
+                                            fontFamily: AppFont.fontSemiBold,
+                                            color: AppColors.primaryColor),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          )
+                        ],
+                      )),
+                );
+              },
+            ),
+          );
+        } else {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(AppImages.emptyBin),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    ConstString.noOrder,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleMedium!
+                        .copyWith(fontSize: 15, color: AppColors.skipGrey),
+                  )
+                ],
               ),
-            );
-          } else {
-            return Center(
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset(AppImages.emptyBin),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      ConstString.noOrder,
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium!
-                          .copyWith(fontSize: 15, color: AppColors.skipGrey),
-                    )
-                  ],
-                ),
-              ),
-            );
-          }
-        },
-      ),
+            ),
+          );
+        }
+      },
     );
   }
 }

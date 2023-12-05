@@ -1,13 +1,9 @@
-// ignore_for_file: unrelated_type_equality_checks, must_be_immutable, unnecessary_null_comparison
-
-import 'dart:html' as html;
-import 'dart:io';
+// ignore_for_file: unrelated_type_equality_checks, must_be_immutable, unnecessary_null_comparison, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:medic_admin/controller/medicine_controller.dart';
 import 'package:medic_admin/model/medicine_data.dart';
 import 'package:medic_admin/theme/colors.dart';
@@ -43,7 +39,7 @@ class MedicineAdd extends StatelessWidget {
           medicine?.drugDrugInteractions ?? "";
       controller.safetyInfoController.text = medicine?.safetyInformation ?? "";
       controller.preRequire.value =
-          medicine!.prescriptionRequire! ? "Yes" : "No";
+      medicine!.prescriptionRequire! ? "Yes" : "No";
     } else {
       controller.medicineController.clear();
       controller.brandController.clear();
@@ -69,7 +65,11 @@ class MedicineAdd extends StatelessWidget {
             medicine == null
                 ? ConstString.addMedicine
                 : ConstString.updateMedicine,
-            style: Theme.of(context).textTheme.titleMedium!.copyWith(
+            style: Theme
+                .of(context)
+                .textTheme
+                .titleMedium!
+                .copyWith(
                 color: Colors.white,
                 fontSize: 16,
                 fontFamily: AppFont.fontMedium),
@@ -80,53 +80,39 @@ class MedicineAdd extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             child: Column(
               children: [
-                GestureDetector(
-                  onTap: () async {
-                    pickImageController.image =
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: ElevatedButton(
+                      onPressed: () async {
+                        pickImageController.image.value =
                         await pickImageController.pickImage();
-                  },
-                  child: Container(
-                    height: 150,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        color: AppColors.tilePrimaryColor,
-                        border: Border.all(color: AppColors.primaryColor)),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 10),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.add,
-                            color: AppColors.primaryColor,
-                            size: 30,
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            ConstString.uploadMedicineImage,
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium
-                                ?.copyWith(color: AppColors.primaryColor),
-                          )
-                        ],
-                      ),
-                    ),
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primaryColor,
+                          fixedSize: Size(150, 30),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8))),
+                      child: const Text("Select Image")),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Obx(
+                        () =>
+                    pickImageController.image.value != null
+                        ? Text(
+                      "Selected Image : ${pickImageController.image.value!
+                          .path}",
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .titleMedium,
+                    )
+                        : const SizedBox(),
                   ),
                 ),
-                // Obx(
-                //   () => pickImageController.imgPath != ""
-                //       ? Text(
-                //           "Selected Image : ${pickImageController.imgPath}",
-                //           style: Theme.of(context).textTheme.titleSmall,
-                //         )
-                //       : const SizedBox(),
-                // ),
                 const SizedBox(
                   height: 30,
                 ),
@@ -134,7 +120,8 @@ class MedicineAdd extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     ConstString.medicineName,
-                    style: Theme.of(context)
+                    style: Theme
+                        .of(context)
                         .textTheme
                         .titleLarge!
                         .copyWith(fontFamily: AppFont.fontMedium),
@@ -174,7 +161,8 @@ class MedicineAdd extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     ConstString.mediBrand,
-                    style: Theme.of(context)
+                    style: Theme
+                        .of(context)
                         .textTheme
                         .titleLarge!
                         .copyWith(fontFamily: AppFont.fontMedium),
@@ -213,7 +201,8 @@ class MedicineAdd extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     ConstString.mediDescription,
-                    style: Theme.of(context)
+                    style: Theme
+                        .of(context)
                         .textTheme
                         .titleLarge!
                         .copyWith(fontFamily: AppFont.fontMedium),
@@ -252,7 +241,8 @@ class MedicineAdd extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     ConstString.mediPrice,
-                    style: Theme.of(context)
+                    style: Theme
+                        .of(context)
                         .textTheme
                         .titleLarge!
                         .copyWith(fontFamily: AppFont.fontMedium),
@@ -291,7 +281,8 @@ class MedicineAdd extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     ConstString.medicineCategory,
-                    style: Theme.of(context)
+                    style: Theme
+                        .of(context)
                         .textTheme
                         .titleLarge!
                         .copyWith(fontFamily: AppFont.fontMedium),
@@ -330,7 +321,8 @@ class MedicineAdd extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     ConstString.medicineDiscount,
-                    style: Theme.of(context)
+                    style: Theme
+                        .of(context)
                         .textTheme
                         .titleLarge!
                         .copyWith(fontFamily: AppFont.fontMedium),
@@ -369,7 +361,8 @@ class MedicineAdd extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     ConstString.mediRate,
-                    style: Theme.of(context)
+                    style: Theme
+                        .of(context)
                         .textTheme
                         .titleLarge!
                         .copyWith(fontFamily: AppFont.fontMedium),
@@ -410,7 +403,8 @@ class MedicineAdd extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     ConstString.uses,
-                    style: Theme.of(context)
+                    style: Theme
+                        .of(context)
                         .textTheme
                         .titleLarge!
                         .copyWith(fontFamily: AppFont.fontMedium),
@@ -449,7 +443,8 @@ class MedicineAdd extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     ConstString.mediAbout,
-                    style: Theme.of(context)
+                    style: Theme
+                        .of(context)
                         .textTheme
                         .titleLarge!
                         .copyWith(fontFamily: AppFont.fontMedium),
@@ -488,7 +483,8 @@ class MedicineAdd extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     ConstString.direction,
-                    style: Theme.of(context)
+                    style: Theme
+                        .of(context)
                         .textTheme
                         .titleLarge!
                         .copyWith(fontFamily: AppFont.fontMedium),
@@ -527,7 +523,8 @@ class MedicineAdd extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     ConstString.benefits,
-                    style: Theme.of(context)
+                    style: Theme
+                        .of(context)
                         .textTheme
                         .titleLarge!
                         .copyWith(fontFamily: AppFont.fontMedium),
@@ -566,7 +563,8 @@ class MedicineAdd extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     ConstString.mediDrug,
-                    style: Theme.of(context)
+                    style: Theme
+                        .of(context)
                         .textTheme
                         .titleLarge!
                         .copyWith(fontFamily: AppFont.fontMedium),
@@ -605,7 +603,8 @@ class MedicineAdd extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     ConstString.safety,
-                    style: Theme.of(context)
+                    style: Theme
+                        .of(context)
                         .textTheme
                         .titleLarge!
                         .copyWith(fontFamily: AppFont.fontMedium),
@@ -644,7 +643,8 @@ class MedicineAdd extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     ConstString.prescription,
-                    style: Theme.of(context)
+                    style: Theme
+                        .of(context)
                         .textTheme
                         .titleLarge!
                         .copyWith(fontFamily: AppFont.fontMedium),
@@ -653,8 +653,8 @@ class MedicineAdd extends StatelessWidget {
                 const SizedBox(
                   height: 10,
                 ),
-
-                Obx(() => Align(
+                Obx(() =>
+                    Align(
                       alignment: Alignment.centerLeft,
                       child: Container(
                         decoration: BoxDecoration(
@@ -699,7 +699,8 @@ class MedicineAdd extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     ConstString.type,
-                    style: Theme.of(context)
+                    style: Theme
+                        .of(context)
                         .textTheme
                         .titleLarge!
                         .copyWith(fontFamily: AppFont.fontMedium),
@@ -710,23 +711,26 @@ class MedicineAdd extends StatelessWidget {
                 ),
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: Obx(() => Container(
+                  child: Obx(() =>
+                      Container(
                         decoration: BoxDecoration(
                             color: AppColors.white,
                             border: Border.all(color: AppColors.lineGrey),
                             borderRadius: BorderRadius.circular(10)),
                         child: DropdownButton(
-                          style: Theme.of(context)
+                          style: Theme
+                              .of(context)
                               .textTheme
                               .titleSmall!
                               .copyWith(fontSize: 15),
                           hint: Text(
                             "Select Discount Type",
-                            style: Theme.of(context)
+                            style: Theme
+                                .of(context)
                                 .textTheme
                                 .titleSmall!
                                 .copyWith(
-                                    fontSize: 15, color: AppColors.txtGrey),
+                                fontSize: 15, color: AppColors.txtGrey),
                           ),
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           icon: Padding(
@@ -744,20 +748,21 @@ class MedicineAdd extends StatelessWidget {
                           },
                           items: controller.typeList.isNotEmpty
                               ? controller.typeList.map((String items) {
-                                  return DropdownMenuItem(
-                                    value: items,
-                                    child: Text(
-                                      items,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium!
-                                          .copyWith(fontSize: 15),
-                                    ),
-                                  );
-                                }).toList()
+                            return DropdownMenuItem(
+                              value: items,
+                              child: Text(
+                                items,
+                                style: Theme
+                                    .of(context)
+                                    .textTheme
+                                    .titleMedium!
+                                    .copyWith(fontSize: 15),
+                              ),
+                            );
+                          }).toList()
                               : null,
                           value: controller.typeList
-                                  .contains(controller.type.value)
+                              .contains(controller.type.value)
                               ? controller.type.value
                               : null,
                         ),
@@ -770,11 +775,13 @@ class MedicineAdd extends StatelessWidget {
                     onPressed: () async {
                       if (controller.validateData()) {
                         showProgressDialogue(context);
-                        String id = controller.medicineRef.doc().id;
+                        String id = controller.medicineRef
+                            .doc()
+                            .id;
 
                         String? imageUrl =
-                            await pickImageController.uploadImageToStorage(
-                                pickImageController.image, id);
+                        await pickImageController.uploadImageToStorage(
+                            pickImageController.image.value, id);
 
                         // if (imageUrl == null) return;
 
@@ -784,9 +791,9 @@ class MedicineAdd extends StatelessWidget {
                               genericName: controller.medicineController.text,
                               brandName: controller.brandController.text,
                               description:
-                                  controller.descriptionController.text,
+                              controller.descriptionController.text,
                               medicinePrice:
-                                  int.parse(controller.priceController.text),
+                              int.parse(controller.priceController.text),
                               categoryId: controller.categoryIdController.text,
                               discountId: controller.discountIdController.text,
                               ratings: controller.ratinsController.text,
@@ -794,28 +801,28 @@ class MedicineAdd extends StatelessWidget {
                               uses: controller.usesController.text,
                               about: controller.aboutController.text,
                               directionForUse:
-                                  controller.directionUseController.text,
+                              controller.directionUseController.text,
                               benefits: controller.benefitsController.text,
                               drugDrugInteractions:
-                                  controller.drugInterController.text,
+                              controller.drugInterController.text,
                               safetyInformation:
-                                  controller.safetyInfoController.text,
+                              controller.safetyInfoController.text,
                               prescriptionRequire:
-                                  controller.preRequire.value == "Yes"
-                                      ? true
-                                      : false,
+                              controller.preRequire.value == "Yes"
+                                  ? true
+                                  : false,
                               type: controller.type.value);
                           await controller.storeMedicineData(medicineData);
-                          pickImageController.image = null;
+                          pickImageController.image.value = null;
                         } else {
                           MedicineData medicineData = MedicineData(
                               id: medicine!.id,
                               genericName: controller.medicineController.text,
                               brandName: controller.brandController.text,
                               description:
-                                  controller.descriptionController.text,
+                              controller.descriptionController.text,
                               medicinePrice:
-                                  int.parse(controller.priceController.text),
+                              int.parse(controller.priceController.text),
                               categoryId: controller.categoryIdController.text,
                               discountId: controller.discountIdController.text,
                               ratings: controller.ratinsController.text,
@@ -823,19 +830,19 @@ class MedicineAdd extends StatelessWidget {
                               uses: controller.usesController.text,
                               about: controller.aboutController.text,
                               directionForUse:
-                                  controller.directionUseController.text,
+                              controller.directionUseController.text,
                               benefits: controller.benefitsController.text,
                               drugDrugInteractions:
-                                  controller.drugInterController.text,
+                              controller.drugInterController.text,
                               safetyInformation:
-                                  controller.safetyInfoController.text,
+                              controller.safetyInfoController.text,
                               prescriptionRequire:
-                                  controller.preRequire.value == "Yes"
-                                      ? true
-                                      : false,
+                              controller.preRequire.value == "Yes"
+                                  ? true
+                                  : false,
                               type: controller.type.value);
                           await controller.updateMedicine(medicineData);
-                          pickImageController.image = null;
+                          pickImageController.image.value = null;
                         }
                       }
                     },
@@ -850,9 +857,13 @@ class MedicineAdd extends StatelessWidget {
                           ? ConstString.addMedicine
                           : ConstString.updateMedicine,
                       style:
-                          Theme.of(context).textTheme.displayMedium!.copyWith(
-                                color: Colors.white,
-                              ),
+                      Theme
+                          .of(context)
+                          .textTheme
+                          .displayMedium!
+                          .copyWith(
+                        color: Colors.white,
+                      ),
                     ))
               ],
             ),

@@ -6,6 +6,7 @@ import 'package:medic_admin/screen/medicine_add.dart';
 import 'package:medic_admin/theme/colors.dart';
 import 'package:medic_admin/utils/app_font.dart';
 import 'package:medic_admin/utils/string.dart';
+import 'package:medic_admin/utils/utils.dart';
 
 class AddMedicine extends StatelessWidget {
   MedicineController controller = Get.put(MedicineController());
@@ -14,81 +15,34 @@ class AddMedicine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: AppColors.white,
-        appBar: AppBar(
-          title: Text(
-            ConstString.addMedicine,
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge!
-                .copyWith(color: AppColors.white),
-          ),
-          backgroundColor: AppColors.primaryColor,
-          centerTitle: true,
-          actions: [
-            IconButton(
-                onPressed: () {
-                  controller.addMedicineDataToFirestore();
-                },
-                icon: Icon(
-                  Icons.import_export,
-                  color: AppColors.white,
-                ))
-          ],
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              child: ElevatedButton(
-                  onPressed: () {
-                    controller.importMedicineData();
-                  },
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primaryColor,
-                      fixedSize: const Size(200, 50),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(40))),
-                  child: const Text(ConstString.pickFile)),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              child: ElevatedButton(
-                  onPressed: () {
-                    Get.to(() => MedicineAdd());
-                  },
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primaryColor,
-                      fixedSize: const Size(200, 50),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(40))),
-                  child: const Text(ConstString.addMedicine)),
-            ),
-          ],
-        ),
-        body: Obx(
+    return Stack(
+      children: [
+        Obx(
           () {
             if (controller.mediDataList.isEmpty) {
-              return Center(
-                  child: Text(
-                "No data available. Please pick a file to load the data.",
-                style: TextStyle(
-                    fontFamily: AppFont.fontMedium,
-                    fontSize: 17,
-                    color: AppColors.primaryColor),
-              ));
+              return Container(
+                height: 600,
+                child: Center(
+                    child: Text(
+                  "No data available. Please pick a file to load the data.",
+                  style: TextStyle(
+                      fontFamily: AppFont.fontMedium,
+                      fontSize: 17,
+                      color: AppColors.primaryColor),
+                )),
+              );
             } else if (controller.columnHeader.isEmpty) {
-              return Center(
-                  child: Text(
-                "No columns found in the loaded file. Please ensure the Excel file has headers.",
-                style: TextStyle(
-                    fontFamily: AppFont.fontMedium,
-                    fontSize: 17,
-                    color: AppColors.primaryColor),
-              ));
+              return Container(
+                height: 600,
+                child: Center(
+                    child: Text(
+                  "No columns found in the loaded file. Please ensure the Excel file has headers.",
+                  style: TextStyle(
+                      fontFamily: AppFont.fontMedium,
+                      fontSize: 17,
+                      color: AppColors.primaryColor),
+                )),
+              );
             } else {
               return SizedBox(
                 height: double.infinity,
@@ -125,6 +79,88 @@ class AddMedicine extends StatelessWidget {
               );
             }
           },
-        ));
+        ),
+        Positioned(
+            bottom: 10,
+            right: 30,
+            child: GestureDetector(
+              onTap: () {
+                if (controller.mediDataList.isNotEmpty) {
+                  controller.addMedicineDataToFirestore();
+                } else {
+                  showInSnackBar("Please select any data!",
+                      isSuccess: false, title: "The Medic");
+                }
+              },
+              child: Container(
+                height: 45,
+                width: 45,
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle, color: AppColors.primaryColor),
+                child: Icon(
+                  Icons.import_export,
+                  color: AppColors.white,
+                ),
+              ),
+            )),
+        Positioned(
+            bottom: 10,
+            right: 0,
+            left: 0,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                  child: ElevatedButton(
+                      onPressed: () {
+                        controller.importMedicineData();
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primaryColor,
+                          fixedSize: const Size(200, 50),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(40))),
+                      child: const Text(ConstString.pickFile)),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                  child: ElevatedButton(
+                      onPressed: () {
+                        Get.to(() => MedicineAdd());
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primaryColor,
+                          fixedSize: const Size(200, 50),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(40))),
+                      child: const Text(ConstString.addMedicine)),
+                ),
+              ],
+            ))
+      ],
+    );
+    // return Scaffold(
+    //   backgroundColor: AppColors.white,
+    //   appBar: AppBar(
+    //     title: Text(
+    //       ConstString.addMedicine,
+    //       style: Theme
+    //           .of(context)
+    //           .textTheme
+    //           .titleLarge!
+    //           .copyWith(color: AppColors.white),
+    //     ),
+    //     backgroundColor: AppColors.primaryColor,
+    //     centerTitle: true,
+    //     actions: [
+    //
+    //     ],
+    //   ),
+    //   floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    // );
   }
 }

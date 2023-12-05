@@ -45,6 +45,20 @@ class OrderController extends GetxController {
     });
   }
 
+  Stream<List<OrderData>> fetchDashboardOrders() {
+    return orderRef
+        .orderBy('orderDate', descending: true)
+        .limit(4)
+        .snapshots()
+        .map((QuerySnapshot query) {
+      List<OrderData> orders = [];
+      for (var doc in query.docs) {
+        orders.add(OrderData.fromMap(doc.data() as Map<String, dynamic>));
+      }
+      return orders;
+    });
+  }
+
   Future<List<String?>> fetchMedicineNameFromIds(
       List<String> medicineIds) async {
     List<String?> genericNames = [];

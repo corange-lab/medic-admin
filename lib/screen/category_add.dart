@@ -25,61 +25,37 @@ class CategoryAdd extends StatelessWidget {
     }
     return WillPopScope(
       child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          backgroundColor: AppColors.primaryColor,
-          title: Text(
-            category == null
-                ? ConstString.addCategory
-                : ConstString.updateCategory,
-            style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                color: Colors.white,
-                fontSize: 16,
-                fontFamily: AppFont.fontMedium),
-          ),
-        ),
         body: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
             child: Column(
               children: [
-                GestureDetector(
-                  onTap: () async {
-                    pickImageController.categoryImage =
-                        await pickImageController.pickImage();
-                  },
-                  child: Container(
-                    height: 150,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        color: AppColors.tilePrimaryColor,
-                        border: Border.all(color: AppColors.primaryColor)),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 10),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.add,
-                            color: AppColors.primaryColor,
-                            size: 30,
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            ConstString.uploadCategoryImage,
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium
-                                ?.copyWith(color: AppColors.primaryColor),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: ElevatedButton(
+                      onPressed: () async {
+                        pickImageController.categoryImage.value =
+                            await pickImageController.pickImage();
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primaryColor,
+                          fixedSize: Size(150, 30),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8))),
+                      child: const Text("Select Image")),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Obx(
+                    () => pickImageController.categoryImage.value != null
+                        ? Text(
+                            "Selected Image : ${pickImageController.categoryImage.value!.path}",
+                            style: Theme.of(context).textTheme.titleMedium,
                           )
-                        ],
-                      ),
-                    ),
+                        : const SizedBox(),
                   ),
                 ),
                 const SizedBox(
@@ -133,7 +109,7 @@ class CategoryAdd extends StatelessWidget {
 
                         String? imageUrl =
                             await pickImageController.uploadImageToStorage(
-                                pickImageController.categoryImage, id);
+                                pickImageController.categoryImage.value, id);
 
                         if (imageUrl == null) return;
 
@@ -143,14 +119,14 @@ class CategoryAdd extends StatelessWidget {
                               name: controller.categoryController.text,
                               image: imageUrl);
                           await controller.storeCategoryData(categoryData);
-                          pickImageController.categoryImage = null;
+                          pickImageController.categoryImage.value = null;
                         } else {
                           CategoryData categoryData = CategoryData(
                               id: category!.id,
                               name: controller.categoryController.text,
                               image: imageUrl);
                           await controller.updateCategory(categoryData);
-                          pickImageController.categoryImage = null;
+                          pickImageController.categoryImage.value = null;
                         }
                       }
                     },

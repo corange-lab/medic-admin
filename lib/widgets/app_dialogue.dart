@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loading_indicator/loading_indicator.dart';
@@ -104,11 +105,11 @@ Future showProgressDialogue(BuildContext context) {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            height: 60,
-            width: 60,
+            height: 120,
+            width: 250,
             decoration: BoxDecoration(
               color: AppColors.white,
-              borderRadius: BorderRadius.circular(5),
+              borderRadius: BorderRadius.circular(15),
               boxShadow: [
                 BoxShadow(
                   color: AppColors.darkPrimaryColor.withOpacity(0.1),
@@ -118,14 +119,27 @@ Future showProgressDialogue(BuildContext context) {
               ],
             ),
             child: SizedBox(
-              height: 35,
-              width: 35,
-              child: LoadingIndicator(
-                colors: [AppColors.primaryColor],
-                indicatorType: Indicator.ballScale,
-                strokeWidth: 1,
-              ),
-            ),
+                height: 50,
+                width: 50,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CupertinoActivityIndicator(
+                      color: AppColors.primaryColor,
+                      radius: 15,
+                    ),
+                    // const SizedBox(
+                    //   height: 20,
+                    // ),
+                    // Text(
+                    //   "Loading...",
+                    //   style: Theme.of(context)
+                    //       .textTheme
+                    //       .titleMedium!
+                    //       .copyWith(fontFamily: AppFont.fontMedium,fontSize: 16),
+                    // )
+                  ],
+                )),
           ),
         ],
       );
