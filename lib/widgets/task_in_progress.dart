@@ -24,6 +24,7 @@ class TaskInProgress extends StatelessWidget {
               data: data[index],
               primary: _getSequenceColor(index),
               onPrimary: Colors.white,
+              index: index,
             ),
           ),
         ),

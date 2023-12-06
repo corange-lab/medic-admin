@@ -32,9 +32,51 @@ class OrderController extends GetxController {
   final CollectionReference userRef =
       FirebaseFirestore.instance.collection('users');
 
-  Stream<List<OrderData>> fetchOrders() {
+  Stream<List<OrderData>> fetchAllOrders() {
     return orderRef
         .orderBy('orderDate', descending: true)
+        .snapshots()
+        .map((QuerySnapshot query) {
+      List<OrderData> orders = [];
+      for (var doc in query.docs) {
+        orders.add(OrderData.fromMap(doc.data() as Map<String, dynamic>));
+      }
+      return orders;
+    });
+  }
+
+  Stream<List<OrderData>> fetchCompletedOrders() {
+    return orderRef
+        .where('orderStatus', isEqualTo: "Completed")
+        // .orderBy('orderDate', descending: true)
+        .snapshots()
+        .map((QuerySnapshot query) {
+      List<OrderData> orders = [];
+      for (var doc in query.docs) {
+        orders.add(OrderData.fromMap(doc.data() as Map<String, dynamic>));
+      }
+      return orders;
+    });
+  }
+
+  Stream<List<OrderData>> fetchProcessOrders() {
+    return orderRef
+        .where('orderStatus', isEqualTo: "Placed")
+        // .orderBy('orderDate', descending: true)
+        .snapshots()
+        .map((QuerySnapshot query) {
+      List<OrderData> orders = [];
+      for (var doc in query.docs) {
+        orders.add(OrderData.fromMap(doc.data() as Map<String, dynamic>));
+      }
+      return orders;
+    });
+  }
+
+  Stream<List<OrderData>> fetchNewOrders() {
+    return orderRef
+        .where('orderStatus', isEqualTo: "Confirm")
+        // .orderBy('orderDate', descending: true)
         .snapshots()
         .map((QuerySnapshot query) {
       List<OrderData> orders = [];

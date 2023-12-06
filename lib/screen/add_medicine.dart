@@ -12,6 +12,7 @@ class AddMedicine extends StatelessWidget {
   MedicineController controller = Get.put(MedicineController());
 
   ScrollController scrollController = ScrollController();
+  Function()? onPressedMenu;
 
   @override
   Widget build(BuildContext context) {
@@ -20,16 +21,35 @@ class AddMedicine extends StatelessWidget {
         Obx(
           () {
             if (controller.mediDataList.isEmpty) {
-              return Container(
-                height: 600,
-                child: Center(
-                    child: Text(
-                  "No data available. Please pick a file to load the data.",
-                  style: TextStyle(
-                      fontFamily: AppFont.fontMedium,
-                      fontSize: 17,
-                      color: AppColors.primaryColor),
-                )),
+              return Column(
+                children: [
+                  if (onPressedMenu != null)
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 10),
+                        child: IconButton(
+                          onPressed: onPressedMenu,
+                          icon: Icon(
+                            Icons.menu,
+                            color: AppColors.txtGrey,
+                          ),
+                        ),
+                      ),
+                    ),
+                  Container(
+                    height: 600,
+                    child: Center(
+                        child: Text(
+                      "No data available. Please pick a file to load the data.",
+                      style: TextStyle(
+                          fontFamily: AppFont.fontMedium,
+                          fontSize: 17,
+                          color: AppColors.primaryColor),
+                    )),
+                  ),
+                ],
               );
             } else if (controller.columnHeader.isEmpty) {
               return Container(
@@ -163,4 +183,6 @@ class AddMedicine extends StatelessWidget {
     //   floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     // );
   }
+
+  AddMedicine({this.onPressedMenu});
 }

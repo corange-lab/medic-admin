@@ -1,25 +1,18 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:medic_admin/constans/app_constants.dart';
+import 'package:medic_admin/model/order_data.dart';
 import 'package:medic_admin/model/user_model.dart';
-import 'package:medic_admin/screen/add_category.dart';
-import 'package:medic_admin/screen/home_screen.dart';
 import 'package:medic_admin/shared_components/card_task.dart';
 import 'package:medic_admin/shared_components/list_task_assigned.dart';
 import 'package:medic_admin/shared_components/list_task_date.dart';
 import 'package:medic_admin/shared_components/selection_button.dart';
 import 'package:medic_admin/shared_components/task_progress.dart';
-import 'package:medic_admin/shared_components/user_profile.dart';
-import 'package:medic_admin/utils/assets.dart';
 
 class DashboardController extends GetxController {
-  final scafoldKey = GlobalKey<ScaffoldState>();
-
   final dataTask = const TaskProgressData(totalTask: 5, totalCompleted: 1);
 
   Rx<UserModel?> loggedInUser = UserModel.newUser().obs;
@@ -30,6 +23,8 @@ class DashboardController extends GetxController {
 
   final CollectionReference _usersCollection =
       FirebaseFirestore.instance.collection('users');
+  final CollectionReference orderRef =
+      FirebaseFirestore.instance.collection('orders');
 
   @override
   void onInit() {
@@ -93,109 +88,54 @@ class DashboardController extends GetxController {
     return loggedInUser.value?.name ?? '';
   }
 
+  Future<double> calculateTotalRevenue() async {
+    double totalRevenue = 0.0;
+
+    try {
+      QuerySnapshot querySnapshot = await orderRef.get();
+
+      for (var doc in querySnapshot.docs) {
+        var data = doc.data();
+        if (data is Map<String, dynamic>) {
+          OrderData order = OrderData.fromMap(data);
+          totalRevenue += order.totalAmount ?? 0.0;
+        }
+      }
+    } catch (e) {
+      print("Error fetching orders: $e");
+    }
+
+    return totalRevenue;
+  }
+
   final taskInProgress = [
     CardTaskData(
       label: "New Order",
-      jobDesk: "System Analyst",
+      jobDesk: "",
       dueDate: DateTime.now().add(const Duration(minutes: 50)),
     ),
     CardTaskData(
       label: "In Process Order",
-      jobDesk: "Marketing",
+      jobDesk: "",
       dueDate: DateTime.now().add(const Duration(hours: 4)),
     ),
     CardTaskData(
       label: "Completed Order",
-      jobDesk: "Design",
+      jobDesk: "",
       dueDate: DateTime.now().add(const Duration(days: 2)),
     ),
     CardTaskData(
       label: "All Order",
-      jobDesk: "System Analyst",
+      jobDesk: "",
       dueDate: DateTime.now().add(const Duration(minutes: 50)),
     )
-  ];
-
-  final weeklyTask = [
-    ListTaskAssignedData(
-      icon: const Icon(EvaIcons.monitor, color: Colors.blueGrey),
-      label: "Slicing UI",
-      jobDesk: "Programmer",
-      assignTo: "Alex Ferguso",
-      editDate: DateTime.now().add(-const Duration(hours: 2)),
-    ),
-    ListTaskAssignedData(
-      icon: const Icon(EvaIcons.star, color: Colors.amber),
-      label: "Personal branding",
-      jobDesk: "Marketing",
-      assignTo: "Justin Beck",
-      editDate: DateTime.now().add(-const Duration(days: 50)),
-    ),
-    const ListTaskAssignedData(
-      icon: Icon(EvaIcons.colorPalette, color: Colors.blue),
-      label: "UI UX ",
-      jobDesk: "Design",
-    ),
-    const ListTaskAssignedData(
-      icon: Icon(EvaIcons.pieChart, color: Colors.redAccent),
-      label: "Determine meeting schedule ",
-      jobDesk: "System Analyst",
-    ),
-  ];
-
-  final taskGroup = [
-    [
-      ListTaskDateData(
-        date: DateTime.now().add(const Duration(days: 2, hours: 10)),
-        label: "5 posts on instagram",
-        jobdesk: "Marketing",
-      ),
-      ListTaskDateData(
-        date: DateTime.now().add(const Duration(days: 2, hours: 11)),
-        label: "Platform Concept",
-        jobdesk: "Animation",
-      ),
-    ],
-    [
-      ListTaskDateData(
-        date: DateTime.now().add(const Duration(days: 4, hours: 5)),
-        label: "UI UX Marketplace",
-        jobdesk: "Design",
-      ),
-      ListTaskDateData(
-        date: DateTime.now().add(const Duration(days: 4, hours: 6)),
-        label: "Create Post For App",
-        jobdesk: "Marketing",
-      ),
-    ],
-    [
-      ListTaskDateData(
-        date: DateTime.now().add(const Duration(days: 6, hours: 5)),
-        label: "2 Posts on Facebook",
-        jobdesk: "Marketing",
-      ),
-      ListTaskDateData(
-        date: DateTime.now().add(const Duration(days: 6, hours: 6)),
-        label: "Create Icon App",
-        jobdesk: "Design",
-      ),
-      ListTaskDateData(
-        date: DateTime.now().add(const Duration(days: 6, hours: 8)),
-        label: "Fixing Error Payment",
-        jobdesk: "Programmer",
-      ),
-      ListTaskDateData(
-        date: DateTime.now().add(const Duration(days: 6, hours: 10)),
-        label: "Create Form Interview",
-        jobdesk: "System Analyst",
-      ),
-    ]
   ];
 
   void onPressedProfil() {}
 
   void onSelectedMainMenu(int index, SelectionButtonData value) {
     selectedMenuIndex.value = index;
+    Get.back();
   }
 
   void onSelectedTaskMenu(int index, String label) {}
@@ -212,10 +152,9 @@ class DashboardController extends GetxController {
 
   void onPressedTaskGroup(int index, ListTaskDateData data) {}
 
-  void openDrawer() {
-    if (scafoldKey.currentState != null) {
-      scafoldKey.currentState!.openDrawer();
-      print("Opened");
+  void openDrawer(GlobalKey<ScaffoldState> scaffoldKey) {
+    if (scaffoldKey.currentState != null) {
+      scaffoldKey.currentState!.openDrawer();
     }
   }
 }

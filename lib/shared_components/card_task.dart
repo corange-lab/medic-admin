@@ -1,6 +1,14 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:medic_admin/controller/order_controller.dart';
+import 'package:medic_admin/model/order_data.dart';
+import 'package:medic_admin/screen/add_category.dart';
+import 'package:medic_admin/screen/add_medicine.dart';
+import 'package:medic_admin/screen/discount_screen.dart';
+import 'package:medic_admin/screen/orders_screen.dart';
 import 'package:medic_admin/theme/colors.dart';
 import 'package:medic_admin/utils/app_font.dart';
 import 'package:medic_admin/utils/helpers/app_helpers.dart';
@@ -18,16 +26,33 @@ class CardTaskData {
 }
 
 class CardTask extends StatelessWidget {
-  const CardTask({
+  CardTask({
     required this.data,
     required this.primary,
     required this.onPrimary,
+    required this.index,
     Key? key,
   }) : super(key: key);
 
   final CardTaskData data;
   final Color primary;
   final Color onPrimary;
+  final int index;
+
+  OrderController controller = Get.put(OrderController());
+
+  Stream<List<OrderData>> _selectedStream() {
+    switch (index) {
+      case 0:
+        return controller.fetchNewOrders();
+      case 1:
+        return controller.fetchProcessOrders();
+      case 2:
+        return controller.fetchCompletedOrders();
+      default:
+        return controller.fetchAllOrders();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,12 +84,38 @@ class CardTask extends StatelessWidget {
                     const Spacer(
                       flex: 5,
                     ),
-                    Text(
-                      "Total Orders : 10",
-                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                          fontFamily: AppFont.fontSemiBold,
-                          fontSize: 16,
-                          color: AppColors.white),
+                    StreamBuilder(
+                      stream: _selectedStream(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(
+                              child: const CupertinoActivityIndicator());
+                        } else if (snapshot.hasData &&
+                            snapshot.data!.isNotEmpty) {
+                          return Text(
+                            "Total Orders : ${snapshot.data!.length}",
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(
+                                    fontFamily: AppFont.fontSemiBold,
+                                    fontSize: 16,
+                                    color: AppColors.white),
+                          );
+                        } else {
+                          return Text(
+                            "No Order Found!",
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(
+                                    fontFamily: AppFont.fontSemiBold,
+                                    fontSize: 16,
+                                    color: AppColors.white),
+                          );
+                        }
+                      },
                     ),
                     const Spacer(flex: 2),
                     _doneButton(context),
@@ -126,7 +177,29 @@ class CardTask extends StatelessWidget {
 
   Widget _doneButton(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: () {
+        if (index == 0) {
+          Get.to(() => OrderScreen(
+                fromHome: true,
+                index: index,
+              ));
+        } else if (index == 1) {
+          Get.to(() => OrderScreen(
+                fromHome: true,
+                index: index,
+              ));
+        } else if (index == 2) {
+          Get.to(() => OrderScreen(
+                fromHome: true,
+                index: index,
+              ));
+        } else {
+          Get.to(() => OrderScreen(
+                fromHome: true,
+                index: index,
+              ));
+        }
+      },
       style: ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         primary: onPrimary,

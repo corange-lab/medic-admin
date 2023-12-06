@@ -22,7 +22,7 @@ class HeaderAllOrder extends StatelessWidget {
   Widget viewAllButton(BuildContext context) {
     return TextButton(
         onPressed: () {
-          Get.to(() => OrderScreen());
+          Get.to(() => OrderScreen(fromHome: true,));
         },
         child: Text(
           "View All",

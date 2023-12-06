@@ -1,6 +1,5 @@
 // ignore_for_file: must_be_immutable
 
-import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -11,10 +10,7 @@ import 'package:medic_admin/controller/auth_controller.dart';
 import 'package:medic_admin/controller/dashboard_controller.dart';
 import 'package:medic_admin/controller/medicine_controller.dart';
 import 'package:medic_admin/controller/order_controller.dart';
-import 'package:medic_admin/model/category_data.dart';
-import 'package:medic_admin/model/medicine_data.dart';
 import 'package:medic_admin/model/order_data.dart';
-import 'package:medic_admin/screen/add_category.dart';
 import 'package:medic_admin/screen/add_medicine.dart';
 import 'package:medic_admin/screen/category_add.dart';
 import 'package:medic_admin/screen/discount_screen.dart';
@@ -26,8 +22,6 @@ import 'package:medic_admin/screen/view_medicine.dart';
 import 'package:medic_admin/shared_components/header_text.dart';
 import 'package:medic_admin/shared_components/responsive_builder.dart';
 import 'package:medic_admin/shared_components/search_field.dart';
-import 'package:medic_admin/shared_components/task_progress.dart';
-import 'package:medic_admin/shared_components/user_profile.dart';
 import 'package:medic_admin/theme/colors.dart';
 import 'package:medic_admin/utils/string.dart';
 import 'package:medic_admin/widgets/header_all_order.dart';
@@ -46,21 +40,20 @@ class HomeScreen extends StatelessWidget {
   MedicineController medicineController = Get.put(MedicineController());
   OrderController orderController = Get.put(OrderController());
 
+  final GlobalKey<ScaffoldState> globalScaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: globalScaffoldKey,
       backgroundColor: AppColors.white,
-      // appBar: AppBar(
-      //   title: Text(
-      //     "Medic",
-      //     style: Theme.of(context).textTheme.titleMedium!.copyWith(
-      //         color: Colors.white,
-      //         fontSize: 16,
-      //         fontFamily: AppFont.fontMedium),
-      //   ),
-      //   backgroundColor: AppColors.primaryColor,
-      //   centerTitle: true,
-      // ),
+      drawer: ResponsiveBuilder.isDesktop(context)
+          ? null
+          : Drawer(
+              child: SafeArea(
+                child: SingleChildScrollView(child: _buildSidebar(context)),
+              ),
+            ),
       body: SafeArea(
         child: ResponsiveBuilder(
           mobileBuilder: (context, constraints) {
@@ -68,11 +61,11 @@ class HomeScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  selectionContent(
-                    onPressedMenu: () {
-                      controller.openDrawer();
-                    },
-                  ),
+                  Obx(() => selectionContent(
+                      onPressedMenu: () {
+                        controller.openDrawer(globalScaffoldKey);
+                      },
+                      context: context)),
                 ],
               ),
             );
@@ -85,11 +78,11 @@ class HomeScreen extends StatelessWidget {
                   flex: constraints.maxWidth > 800 ? 8 : 7,
                   child: SingleChildScrollView(
                     controller: ScrollController(),
-                    child: selectionContent(
-                      onPressedMenu: () {
-                        controller.openDrawer();
-                      },
-                    ),
+                    child: Obx(() => selectionContent(
+                        onPressedMenu: () {
+                          controller.openDrawer(globalScaffoldKey);
+                        },
+                        context: context)),
                   ),
                 ),
               ],
@@ -108,7 +101,7 @@ class HomeScreen extends StatelessWidget {
                 ),
                 Flexible(
                   flex: constraints.maxWidth > 1350 ? 10 : 9,
-                  child: Obx(() => selectionContent()),
+                  child: Obx(() => selectionContent(context: context)),
                 ),
               ],
             );
@@ -118,27 +111,51 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget selectionContent({Function()? onPressedMenu}) {
+  Widget selectionContent({Function()? onPressedMenu, BuildContext? context}) {
     switch (controller.selectedMenuIndex.value) {
       case 0:
         return _buildTaskContent(onPressedMenu: onPressedMenu);
       case 1:
-        return CategoryAdd();
+        return CategoryAdd(
+          onPressedMenu: onPressedMenu,
+        );
       case 2:
-        return ViewCategory();
+        return ViewCategory(
+          onPressedMenu: onPressedMenu,
+        );
       case 3:
-        return AddMedicine();
+        return AddMedicine(
+          onPressedMenu: onPressedMenu,
+        );
       case 4:
-        return ViewMedicine();
+        return ViewMedicine(
+          onPressedMenu: onPressedMenu,
+        );
       case 5:
-        return OrderScreen();
+        return OrderScreen(
+          fromHome: false,
+          onPressedMenu: onPressedMenu,
+        );
       case 6:
-        return PrescriptionScreen();
+        return PrescriptionScreen(
+          onPressedMenu: onPressedMenu,
+        );
       case 7:
-        return DiscountScreen();
+        return DiscountScreen(
+          onPressedMenu: onPressedMenu,
+        );
+      case 8:
+        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+          showLogOutDialogue(context!);
+        });
+        return _buildTaskContent(onPressedMenu: onPressedMenu);
       default:
         return _buildTaskContent(onPressedMenu: onPressedMenu);
     }
+  }
+
+  void showLogOutDialogue(BuildContext context) {
+    logoutDialogue(context, _authController);
   }
 
   Widget _buildSidebar(BuildContext context) {
@@ -210,11 +227,32 @@ class HomeScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: kSpacing),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: HeaderText(
-                DateTime.now().formatdMMMMY(),
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                HeaderText(
+                  DateTime.now().formatdMMMMY(),
+                ),
+                FutureBuilder(
+                  future: controller.calculateTotalRevenue(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CupertinoActivityIndicator());
+                    } else if (snapshot.hasData) {
+                      double revanue = snapshot.data!;
+                      return Text(
+                        "Total Revanue : $revanue",
+                        style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                            fontFamily: AppFont.fontSemiBold,
+                            fontSize: 18,
+                            color: AppColors.primaryColor),
+                      );
+                    } else {
+                      return SizedBox();
+                    }
+                  },
+                )
+              ],
             ),
             const SizedBox(height: kSpacing),
             TaskInProgress(
@@ -227,7 +265,7 @@ class HomeScreen extends StatelessWidget {
               stream: orderController.fetchDashboardOrders(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CupertinoActivityIndicator());
+                  return const Center(child: CupertinoActivityIndicator());
                 } else if (snapshot.hasData) {
                   List<OrderData> orders = snapshot.data!;
                   return Padding(
@@ -235,7 +273,7 @@ class HomeScreen extends StatelessWidget {
                         vertical: 20, horizontal: 15),
                     child: ListView.builder(
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       itemCount: orders.length,
                       itemBuilder: (context, index) {
                         return GestureDetector(
@@ -383,7 +421,7 @@ class HomeScreen extends StatelessWidget {
                                           ),
                                         ],
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                       Row(

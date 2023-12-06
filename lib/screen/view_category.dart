@@ -14,7 +14,10 @@ import 'package:medic_admin/utils/string.dart';
 import 'package:medic_admin/widgets/app_dialogue.dart';
 
 class ViewCategory extends StatelessWidget {
-  const ViewCategory({super.key});
+
+  Function()? onPressedMenu;
+
+  ViewCategory({super.key,this.onPressedMenu});
 
   @override
   Widget build(BuildContext context) {
@@ -31,141 +34,168 @@ class ViewCategory extends StatelessWidget {
               ));
             } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
               List<CategoryData> categoryList = snapshot.data!;
-              return ListView.builder(
-                itemCount: categoryList.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 15),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: AppColors.decsGrey,
-                          borderRadius: BorderRadius.circular(10),
-                          border:
-                              Border.all(width: 1, color: AppColors.lineGrey)),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 10),
-                        child: Row(
-                          children: [
-                            Container(
-                              height: 50,
-                              decoration: BoxDecoration(
-                                  color: AppColors.primaryColor,
-                                  borderRadius: BorderRadius.circular(12)),
-                              child: CachedNetworkImage(
-                                width: 50,
-                                height: 50,
-                                imageUrl: categoryList[index].image ?? '',
-                                errorWidget: (context, url, error) {
-                                  return const Icon(Icons.error);
-                                },
-                                progressIndicatorBuilder:
-                                    (context, url, downloadProgress) =>
-                                        SizedBox(
-                                  width: 120,
-                                  child: Center(
-                                      child: SizedBox(
-                                    height: 35,
-                                    width: 35,
-                                    child: LoadingIndicator(
-                                      colors: [AppColors.primaryColor],
-                                      indicatorType: Indicator.ballScale,
-                                      strokeWidth: 1,
-                                    ),
-                                  )),
-                                ),
-                                fit: BoxFit.cover,
-                              ),
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    if (onPressedMenu != null)
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          child: IconButton(
+                            onPressed: onPressedMenu,
+                            icon: Icon(
+                              Icons.menu,
+                              color: AppColors.txtGrey,
                             ),
-                            const SizedBox(
-                              width: 15,
-                            ),
-                            Text(
-                              "${categoryList[index].name}",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium!
-                                  .copyWith(
-                                      color: AppColors.primaryColor,
-                                      fontFamily: AppFont.fontMedium),
-                            ),
-                            const Spacer(),
-                            PopupMenuButton(
-                              elevation: 3,
-                              shadowColor: AppColors.txtGrey.withOpacity(0.1),
-                              icon: SvgPicture.asset(
-                                AppIcons.more,
-                                color: Colors.black,
-                              ),
-                              onSelected: (value) async {},
-                              padding: EdgeInsets.zero,
-                              itemBuilder: (context) => <PopupMenuEntry>[
-                                PopupMenuItem(
-                                  onTap: () {
-                                    Get.to(() => CategoryAdd(
-                                          category: categoryList[index],
-                                        ));
-                                  },
-                                  height: 35,
-                                  value: "Edit",
-                                  child: Row(
-                                    children: [
-                                      SvgPicture.asset(AppIcons.edit),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      Text(
-                                        "Edit",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleSmall!
-                                            .copyWith(
-                                                fontFamily: AppFont.fontMedium,
-                                                fontSize: 14,
-                                                color: AppColors.txtGrey),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                PopupMenuItem(
-                                  onTap: () async {
-                                    showProgressDialogue(context);
-                                    await controller.deleteCategory(
-                                        categoryList[index].id!);
-                                  },
-                                  height: 35,
-                                  value: "Delete",
-                                  child: Row(
-                                    children: [
-                                      SvgPicture.asset(
-                                        AppIcons.delete,
-                                        height: 14,
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      Text(
-                                        "Delete",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleSmall!
-                                            .copyWith(
-                                                fontFamily: AppFont.fontMedium,
-                                                fontSize: 14,
-                                                color: AppColors.txtGrey),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              ],
-                            )
-                          ],
+                          ),
                         ),
                       ),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: categoryList.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 15),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: AppColors.decsGrey,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                    width: 1, color: AppColors.lineGrey)),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 10),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                        color: AppColors.primaryColor,
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                    child: CachedNetworkImage(
+                                      width: 50,
+                                      height: 50,
+                                      imageUrl: categoryList[index].image ?? '',
+                                      errorWidget: (context, url, error) {
+                                        return const Icon(Icons.error);
+                                      },
+                                      progressIndicatorBuilder:
+                                          (context, url, downloadProgress) =>
+                                              SizedBox(
+                                        width: 120,
+                                        child: Center(
+                                            child: SizedBox(
+                                          height: 35,
+                                          width: 35,
+                                          child: LoadingIndicator(
+                                            colors: [AppColors.primaryColor],
+                                            indicatorType: Indicator.ballScale,
+                                            strokeWidth: 1,
+                                          ),
+                                        )),
+                                      ),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 15,
+                                  ),
+                                  Text(
+                                    "${categoryList[index].name}",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium!
+                                        .copyWith(
+                                            color: AppColors.primaryColor,
+                                            fontFamily: AppFont.fontMedium),
+                                  ),
+                                  const Spacer(),
+                                  PopupMenuButton(
+                                    elevation: 3,
+                                    shadowColor:
+                                        AppColors.txtGrey.withOpacity(0.1),
+                                    icon: SvgPicture.asset(
+                                      AppIcons.more,
+                                      color: Colors.black,
+                                    ),
+                                    onSelected: (value) async {},
+                                    padding: EdgeInsets.zero,
+                                    itemBuilder: (context) => <PopupMenuEntry>[
+                                      PopupMenuItem(
+                                        onTap: () {
+                                          Get.to(() => CategoryAdd(
+                                                category: categoryList[index],
+                                              ));
+                                        },
+                                        height: 35,
+                                        value: "Edit",
+                                        child: Row(
+                                          children: [
+                                            SvgPicture.asset(AppIcons.edit),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            Text(
+                                              "Edit",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleSmall!
+                                                  .copyWith(
+                                                      fontFamily:
+                                                          AppFont.fontMedium,
+                                                      fontSize: 14,
+                                                      color: AppColors.txtGrey),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      PopupMenuItem(
+                                        onTap: () async {
+                                          showProgressDialogue(context);
+                                          await controller.deleteCategory(
+                                              categoryList[index].id!);
+                                        },
+                                        height: 35,
+                                        value: "Delete",
+                                        child: Row(
+                                          children: [
+                                            SvgPicture.asset(
+                                              AppIcons.delete,
+                                              height: 14,
+                                            ),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            Text(
+                                              "Delete",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleSmall!
+                                                  .copyWith(
+                                                      fontFamily:
+                                                          AppFont.fontMedium,
+                                                      fontSize: 14,
+                                                      color: AppColors.txtGrey),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
+                  ],
+                ),
               );
             } else {
               return const Center(child: Text("No Category Found!"));
