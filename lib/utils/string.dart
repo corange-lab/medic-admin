@@ -94,6 +94,7 @@ class ConstString {
   static const String addCategory = "Add Category";
   static const String addMedicine = "Add Medicines";
   static const String updateMedicine = "Update Medicines";
+  static const String medicineDetail = "Medicine Detail";
   static const String updateCategory = "Update Category";
   static const String viewCategory = "View Category";
   static const String viewMedicine = "View Medicines";

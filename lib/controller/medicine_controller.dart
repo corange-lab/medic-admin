@@ -9,6 +9,8 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:medic_admin/model/category_data.dart';
 import 'package:medic_admin/model/medicine_data.dart';
+import 'package:medic_admin/theme/colors.dart';
+import 'package:medic_admin/utils/assets.dart';
 import 'package:medic_admin/utils/utils.dart';
 import 'package:medic_admin/widgets/pick_image.dart';
 
@@ -51,6 +53,20 @@ class MedicineController extends GetxController {
     // TODO: implement onInit
     super.onInit();
   }
+
+  List popularColorList = [
+    AppColors.listColor1,
+    AppColors.listColor2,
+    AppColors.listColor3,
+    AppColors.listColor1,
+    AppColors.listColor4,
+  ];
+
+  List medicineImageList = [
+    AppImages.medicineBox1,
+    AppImages.medicineBox2,
+    AppImages.medicineBox3,
+  ];
 
   bool validateData() {
     if (medicineController.text.trim().isEmpty) {

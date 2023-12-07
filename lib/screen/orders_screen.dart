@@ -85,7 +85,7 @@ class OrderScreen extends StatelessWidget {
                                 Icons.arrow_back,
                                 color: AppColors.primaryColor,
                               ))
-                          : SizedBox(),
+                          : const SizedBox(),
                       title: Text(
                         "Orders",
                         style:
@@ -97,7 +97,7 @@ class OrderScreen extends StatelessWidget {
                       ),
                     ),
                     ListView.builder(
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemCount: orders.length,
                       itemBuilder: (context, index) {
@@ -246,7 +246,7 @@ class OrderScreen extends StatelessWidget {
                                           ),
                                         ],
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                       Row(

@@ -11,7 +11,6 @@ import 'package:medic_admin/model/user_model.dart';
 import 'package:medic_admin/screen/home_screen.dart';
 import 'package:medic_admin/screen/login_screen.dart';
 import 'package:medic_admin/screen/verify_otp_screen.dart';
-import 'package:medic_admin/services/notification/notification_service.dart';
 import 'package:medic_admin/utils/app_storage.dart';
 import 'package:medic_admin/utils/controller_ids.dart';
 import 'package:medic_admin/utils/string.dart';
@@ -187,7 +186,7 @@ class AuthController extends GetxController {
   }
 
   Future<void> signOut() async {
-    await NotificationService.instance.reGenerateFCMToken();
+    // await NotificationService.instance.reGenerateFCMToken();
     phoneNumberController.clear();
     AppStorage appStorage = AppStorage();
     appStorage.appLogout();
@@ -269,7 +268,7 @@ class AuthController extends GetxController {
         gotUser.role != null &&
         (gotUser.role ?? []).contains('admin')) {
       await appStorage.setUserData(gotUser);
-      await NotificationService.instance.getTokenAndUpdateCurrentUser();
+      // await NotificationService.instance.getTokenAndUpdateCurrentUser();
       await Get.offAll(() => HomeScreen());
     } else {
       showInSnackBar('Only admin can login.', isSuccess: false);

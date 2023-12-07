@@ -165,14 +165,8 @@ class HomeScreen extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
           child: ListTile(
-            leading: Container(
-              height: 40,
-              width: 40,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: AppColors.primaryColor,
-              ),
-            ),
+            leading: ClipOval(
+                child: SvgPicture.asset(AppImages.medicLogo, width: 40)),
             title: Text(
               controller.loggedInUser.value?.name ?? "Medic Admin",
               style: Theme.of(context).textTheme.titleMedium!.copyWith(

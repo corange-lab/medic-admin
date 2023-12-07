@@ -8,6 +8,7 @@ import 'package:medic_admin/constans/app_constants.dart';
 import 'package:medic_admin/controller/medicine_controller.dart';
 import 'package:medic_admin/model/medicine_data.dart';
 import 'package:medic_admin/screen/medicine_add.dart';
+import 'package:medic_admin/screen/medicine_details.dart';
 import 'package:medic_admin/theme/colors.dart';
 import 'package:medic_admin/utils/app_font.dart';
 import 'package:medic_admin/utils/assets.dart';
@@ -53,130 +54,144 @@ class ViewMedicine extends StatelessWidget {
                       ),
                     ),
                   ),
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: medicine.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: AppColors.decsGrey,
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                                width: 1, color: AppColors.lineGrey)),
-                        child: ExpansionTile(
-                          backgroundColor: AppColors.decsGrey,
-                          iconColor: AppColors.primaryColor,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                          title: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: EdgeInsets.zero,
+                    itemCount: medicine.length,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 4,
+                            childAspectRatio: 1.1,
+                            mainAxisSpacing: 15,
+                            crossAxisSpacing: 15),
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          Get.to(() => MedicineDetails(
+                                medicine: medicine[index],
+                              ));
+                        },
+                        child: Container(
+                          height: 130,
+                          width: 130,
+                          clipBehavior: Clip.antiAlias,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            color: controller.popularColorList[
+                                index % (controller.popularColorList.length)],
+                          ),
+                          child: Stack(
                             children: [
-                              Text(
-                                medicine[index].genericName ??
-                                    "Unknown Medicine",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium!
-                                    .copyWith(
-                                        fontFamily: AppFont.fontBold,
-                                        fontSize: 17,
-                                        color: AppColors.primaryColor),
+                              SvgPicture.asset(
+                                AppImages.designVector,
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                height: double.infinity,
                               ),
-                              Text(
-                                "Price : LE ${medicine[index].medicinePrice.toString()}",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium!
-                                    .copyWith(fontFamily: AppFont.fontMedium),
-                              )
+                              Positioned(
+                                  top: 20,
+                                  left: 15,
+                                  child: Text(
+                                    medicine[index].genericName ?? "",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleLarge!
+                                        .copyWith(
+                                            color: AppColors.white,
+                                            fontFamily: AppFont.fontMedium,
+                                            fontSize: 20),
+                                  )),
+                              Positioned(
+                                  bottom: 0,
+                                  right: 0,
+                                  child: Image.asset(
+                                    controller.medicineImageList[index %
+                                        (controller.medicineImageList.length)],
+                                    height: 120,
+                                  ))
                             ],
                           ),
-                          children: [
-                            // Place your details here inside the children of ExpansionTile
-                            medicineDetailTile(
-                                context, "Brand:", medicine[index].brandName),
-                            medicineDetailTile(
-                                context, "About:", medicine[index].about),
-                            medicineDetailTile(
-                                context, "Benefits:", medicine[index].benefits),
-                            medicineDetailTile(context, "Directions:",
-                                medicine[index].directionForUse),
-                            medicineDetailTile(context, "Interactions:",
-                                medicine[index].drugDrugInteractions),
-                            medicineDetailTile(
-                                context, "Uses:", medicine[index].uses),
-                            medicineDetailTile(context, "Safety Information:",
-                                medicine[index].safetyInformation),
-                            medicineDetailTile(context, "Reviews:",
-                                medicine[index].ratings.toString()),
-                            medicineDetailTile(context, "Description:",
-                                medicine[index].description),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 10),
-                              child: Row(
-                                children: [
-                                  ElevatedButton(
-                                      onPressed: () async {
-                                        showProgressDialogue(context);
-                                        await controller.deleteMedicine(
-                                            medicine[index].id!);
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                          backgroundColor: AppColors.red,
-                                          fixedSize: const Size(150, 40),
-                                          elevation: 0,
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(30))),
-                                      child: Text(
-                                        "Delete",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .displayMedium!
-                                            .copyWith(
-                                              color: Colors.white,
-                                            ),
-                                      )),
-                                  const SizedBox(
-                                    width: 15,
-                                  ),
-                                  ElevatedButton(
-                                      onPressed: () {
-                                        Get.to(() => MedicineAdd(
-                                              medicine: medicine[index],
-                                            ));
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                          backgroundColor:
-                                              AppColors.primaryColor,
-                                          fixedSize: const Size(150, 40),
-                                          elevation: 0,
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(30))),
-                                      child: Text(
-                                        "Edit",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .displayMedium!
-                                            .copyWith(
-                                              color: Colors.white,
-                                            ),
-                                      )),
-                                ],
-                              ),
-                            ),
-                          ],
                         ),
-                      ),
-                    );
-                  },
-                ),
+                      );
+                    },
+                  ),
+                )
+                // ListView.builder(
+                //   shrinkWrap: true,
+                //   physics: NeverScrollableScrollPhysics(),
+                //   itemCount: medicine.length,
+                //   itemBuilder: (context, index) {
+                //     return Padding(
+                //       padding: const EdgeInsets.symmetric(
+                //           horizontal: 20, vertical: 10),
+                //       child: Container(
+                //         decoration: BoxDecoration(
+                //             color: AppColors.decsGrey,
+                //             borderRadius: BorderRadius.circular(10),
+                //             border: Border.all(
+                //                 width: 1, color: AppColors.lineGrey)),
+                //         child: ExpansionTile(
+                //           backgroundColor: AppColors.decsGrey,
+                //           iconColor: AppColors.primaryColor,
+                //           shape: RoundedRectangleBorder(
+                //               borderRadius: BorderRadius.circular(10)),
+                //           title: Row(
+                //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //             children: [
+                //               Text(
+                //                 medicine[index].genericName ??
+                //                     "Unknown Medicine",
+                //                 style: Theme.of(context)
+                //                     .textTheme
+                //                     .titleMedium!
+                //                     .copyWith(
+                //                         fontFamily: AppFont.fontBold,
+                //                         fontSize: 17,
+                //                         color: AppColors.primaryColor),
+                //               ),
+                //               Text(
+                //                 "Price : LE ${medicine[index].medicinePrice.toString()}",
+                //                 style: Theme.of(context)
+                //                     .textTheme
+                //                     .titleMedium!
+                //                     .copyWith(fontFamily: AppFont.fontMedium),
+                //               )
+                //             ],
+                //           ),
+                //           children: [
+                //             // Place your details here inside the children of ExpansionTile
+                //             medicineDetailTile(
+                //                 context, "Brand:", medicine[index].brandName),
+                //             medicineDetailTile(
+                //                 context, "About:", medicine[index].about),
+                //             medicineDetailTile(
+                //                 context, "Benefits:", medicine[index].benefits),
+                //             medicineDetailTile(context, "Directions:",
+                //                 medicine[index].directionForUse),
+                //             medicineDetailTile(context, "Interactions:",
+                //                 medicine[index].drugDrugInteractions),
+                //             medicineDetailTile(
+                //                 context, "Uses:", medicine[index].uses),
+                //             medicineDetailTile(context, "Safety Information:",
+                //                 medicine[index].safetyInformation),
+                //             medicineDetailTile(context, "Reviews:",
+                //                 medicine[index].ratings.toString()),
+                //             medicineDetailTile(context, "Description:",
+                //                 medicine[index].description),
+                //             Padding(
+                //               padding: const EdgeInsets.symmetric(
+                //                   horizontal: 20, vertical: 10),
+                //               child: ,
+                //             ),
+                //           ],
+                //         ),
+                //       ),
+                //     );
+                //   },
+                // ),
               ],
             ),
           );

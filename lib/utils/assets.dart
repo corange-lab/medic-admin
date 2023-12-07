@@ -2,6 +2,11 @@ class AppImages {
   static const String medic_teal_text = 'asset/images/medic_teal_text.svg';
   static const String medic_white_text = 'asset/images/medic_white_text.svg';
   static const String emptyBin = 'asset/images/emptyBin.svg';
+  static const String medicLogo = 'asset/images/medic_logo.svg';
+  static const String designVector = 'asset/images/design_vector.svg';
+  static const String medicineBox1 = 'asset/images/medicinebox1.png';
+  static const String medicineBox2 = 'asset/images/medicinebox2.png';
+  static const String medicineBox3 = 'asset/images/medicinebox3.png';
 }
 
 class AppIcons {
