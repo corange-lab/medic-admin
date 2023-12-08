@@ -23,6 +23,7 @@ class ViewMedicine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     return StreamBuilder(
       stream: controller.fetchMedicine(),
       builder: (context, snapshot) {
@@ -102,7 +103,8 @@ class ViewMedicine extends StatelessWidget {
                                         .copyWith(
                                             color: AppColors.white,
                                             fontFamily: AppFont.fontMedium,
-                                            fontSize: 20),
+                                            fontSize:
+                                                size.width > 500 ? 20 : 14),
                                   )),
                               Positioned(
                                   bottom: 0,
@@ -110,7 +112,9 @@ class ViewMedicine extends StatelessWidget {
                                   child: Image.asset(
                                     controller.medicineImageList[index %
                                         (controller.medicineImageList.length)],
-                                    height: 120,
+                                    height: size.width > 500
+                                        ? size.height * 0.2
+                                        : size.height * 0.08,
                                   ))
                             ],
                           ),

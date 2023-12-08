@@ -17,6 +17,7 @@ import 'package:medic_admin/screen/discount_screen.dart';
 import 'package:medic_admin/screen/order_details.dart';
 import 'package:medic_admin/screen/orders_screen.dart';
 import 'package:medic_admin/screen/prescription_screen.dart';
+import 'package:medic_admin/screen/user_list.dart';
 import 'package:medic_admin/screen/view_category.dart';
 import 'package:medic_admin/screen/view_medicine.dart';
 import 'package:medic_admin/shared_components/header_text.dart';
@@ -145,6 +146,10 @@ class HomeScreen extends StatelessWidget {
           onPressedMenu: onPressedMenu,
         );
       case 8:
+        return UserList(
+          onPressedMenu: onPressedMenu,
+        );
+      case 9:
         WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
           showLogOutDialogue(context!);
         });

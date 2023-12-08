@@ -9,6 +9,7 @@ class UserModel {
   final String? fcmToken;
   final int? countryCode;
   final String? mobileNo;
+  final String? email;
   final String? profilePicture;
   final bool? enablePushNotification;
   final List<String>? role;
@@ -18,6 +19,7 @@ class UserModel {
     this.name,
     this.gender,
     this.mobileNo,
+    this.email,
     this.fcmToken,
     this.countryCode,
     this.profilePicture,
@@ -30,6 +32,7 @@ class UserModel {
     this.name,
     this.gender,
     this.mobileNo,
+    this.email,
     this.fcmToken,
     this.countryCode,
     this.profilePicture,
@@ -43,6 +46,7 @@ class UserModel {
     String? gender,
     int? countryCode,
     String? mobileNo,
+    String? email,
     String? fcmToken,
     String? profilePicture,
     bool? enablePushNotification,
@@ -53,6 +57,7 @@ class UserModel {
       name: name ?? this.name,
       gender: gender ?? this.gender,
       mobileNo: mobileNo ?? this.mobileNo,
+      email: email ?? this.email,
       fcmToken: fcmToken ?? this.fcmToken,
       countryCode: countryCode ?? this.countryCode,
       profilePicture: profilePicture ?? this.profilePicture,
@@ -69,6 +74,7 @@ class UserModel {
       'fcmToken': fcmToken,
       'id': id,
       'mobileNo': mobileNo,
+      'email': email,
       'name': name,
       'profilePicture': profilePicture,
       'gender': gender,
@@ -76,6 +82,11 @@ class UserModel {
   }
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
+    List<String>? roles;
+    if (map['role'] != null && map['role'] is List) {
+      roles = List<String>.from(map['role']);
+    }
+
     return UserModel._(
       id: map['id'],
       name: map['name'],
@@ -83,9 +94,10 @@ class UserModel {
       fcmToken: map['fcmToken'],
       countryCode: map['countryCode'],
       mobileNo: map['mobileNo'],
+      email: map['email'],
       profilePicture: map['profilePicture'],
       enablePushNotification: map['enablePushNotification'],
-      role: map['role'].cast<String>(),
+      role: roles,
     );
   }
 
@@ -111,6 +123,7 @@ class UserModel {
       fcmToken: map['fcmToken'],
       countryCode: map['countryCode'],
       mobileNo: map['mobileNo'],
+      email: map['email'],
       profilePicture: map['profilePicture'],
       enablePushNotification: map['enablePushNotification'],
       role: map['role'],

@@ -57,7 +57,7 @@ class SplashController extends GetxController {
     if (appStorage.checkLoginAndUserData()) {
       await Get.offAll(() => HomeScreen());
     } else {
-      await Get.offAll(() => const LoginScreen());
+      await Get.offAll(() => LoginScreen());
     }
   }
 }

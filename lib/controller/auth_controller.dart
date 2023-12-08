@@ -28,6 +28,9 @@ class AuthController extends GetxController {
   RxBool isOtpSent = false.obs;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  RxString countryCode = "+232".obs;
+  TextEditingController otpController = TextEditingController();
+
   String countryName = '';
   UserModel? userModel;
   User? user;
@@ -72,11 +75,11 @@ class AuthController extends GetxController {
   }
 
   String getPhoneNumber() {
-    if (countryData?.dialCode == null) {
+    if (countryCode.isEmpty) {
       return '';
     }
     String mPhoneNumber = phoneNumberController.text.trim();
-    String phone = (countryData!.dialCode! + mPhoneNumber).replaceAll('+', '');
+    String phone = (countryCode + mPhoneNumber).replaceAll('+', '');
     print('phone $phone');
     return phone;
   }
@@ -199,7 +202,7 @@ class AuthController extends GetxController {
   }
 
   Future<void> verifyOtp(BuildContext context, User? user) async {
-    if (otp.value.isEmpty) {
+    if (otpController.text.isEmpty) {
       showInSnackBar(
         ConstString.enterOtp,
         title: ConstString.enterOtpMessage,
@@ -212,7 +215,8 @@ class AuthController extends GetxController {
       showProgressDialogue(context);
       final UserCredential result;
       PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
-          verificationId: verificationId.value, smsCode: otp.value);
+          verificationId: verificationId.value,
+          smsCode: otpController.text.trim());
 
       if (user != null) {
         if (user.phoneNumber == null) {

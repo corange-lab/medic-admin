@@ -39,7 +39,7 @@ class MedicineAdd extends StatelessWidget {
           medicine?.drugDrugInteractions ?? "";
       controller.safetyInfoController.text = medicine?.safetyInformation ?? "";
       controller.preRequire.value =
-      medicine!.prescriptionRequire! ? "Yes" : "No";
+          medicine!.prescriptionRequire! ? "Yes" : "No";
     } else {
       controller.medicineController.clear();
       controller.brandController.clear();
@@ -65,11 +65,7 @@ class MedicineAdd extends StatelessWidget {
             medicine == null
                 ? ConstString.addMedicine
                 : ConstString.updateMedicine,
-            style: Theme
-                .of(context)
-                .textTheme
-                .titleMedium!
-                .copyWith(
+            style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 color: Colors.white,
                 fontSize: 16,
                 fontFamily: AppFont.fontMedium),
@@ -85,7 +81,7 @@ class MedicineAdd extends StatelessWidget {
                   child: ElevatedButton(
                       onPressed: () async {
                         pickImageController.image.value =
-                        await pickImageController.pickImage();
+                            await pickImageController.pickImage();
                       },
                       style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primaryColor,
@@ -100,16 +96,14 @@ class MedicineAdd extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Obx(
-                        () =>
-                    pickImageController.image.value != null
-                        ? Text(
-                      "Selected Image : ${pickImageController.image.value!
-                          .path}",
-                      style: Theme
-                          .of(context)
-                          .textTheme
-                          .titleMedium,
-                    )
+                    () => pickImageController.image.value != null
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Image.network(
+                              pickImageController.image.value!.path,
+                              height: 100,
+                              width: 100,
+                            ))
                         : const SizedBox(),
                   ),
                 ),
@@ -120,8 +114,7 @@ class MedicineAdd extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     ConstString.medicineName,
-                    style: Theme
-                        .of(context)
+                    style: Theme.of(context)
                         .textTheme
                         .titleLarge!
                         .copyWith(fontFamily: AppFont.fontMedium),
@@ -161,8 +154,7 @@ class MedicineAdd extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     ConstString.mediBrand,
-                    style: Theme
-                        .of(context)
+                    style: Theme.of(context)
                         .textTheme
                         .titleLarge!
                         .copyWith(fontFamily: AppFont.fontMedium),
@@ -201,8 +193,7 @@ class MedicineAdd extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     ConstString.mediDescription,
-                    style: Theme
-                        .of(context)
+                    style: Theme.of(context)
                         .textTheme
                         .titleLarge!
                         .copyWith(fontFamily: AppFont.fontMedium),
@@ -241,8 +232,7 @@ class MedicineAdd extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     ConstString.mediPrice,
-                    style: Theme
-                        .of(context)
+                    style: Theme.of(context)
                         .textTheme
                         .titleLarge!
                         .copyWith(fontFamily: AppFont.fontMedium),
@@ -281,8 +271,7 @@ class MedicineAdd extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     ConstString.medicineCategory,
-                    style: Theme
-                        .of(context)
+                    style: Theme.of(context)
                         .textTheme
                         .titleLarge!
                         .copyWith(fontFamily: AppFont.fontMedium),
@@ -321,8 +310,7 @@ class MedicineAdd extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     ConstString.medicineDiscount,
-                    style: Theme
-                        .of(context)
+                    style: Theme.of(context)
                         .textTheme
                         .titleLarge!
                         .copyWith(fontFamily: AppFont.fontMedium),
@@ -361,8 +349,7 @@ class MedicineAdd extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     ConstString.mediRate,
-                    style: Theme
-                        .of(context)
+                    style: Theme.of(context)
                         .textTheme
                         .titleLarge!
                         .copyWith(fontFamily: AppFont.fontMedium),
@@ -403,8 +390,7 @@ class MedicineAdd extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     ConstString.uses,
-                    style: Theme
-                        .of(context)
+                    style: Theme.of(context)
                         .textTheme
                         .titleLarge!
                         .copyWith(fontFamily: AppFont.fontMedium),
@@ -443,8 +429,7 @@ class MedicineAdd extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     ConstString.mediAbout,
-                    style: Theme
-                        .of(context)
+                    style: Theme.of(context)
                         .textTheme
                         .titleLarge!
                         .copyWith(fontFamily: AppFont.fontMedium),
@@ -483,8 +468,7 @@ class MedicineAdd extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     ConstString.direction,
-                    style: Theme
-                        .of(context)
+                    style: Theme.of(context)
                         .textTheme
                         .titleLarge!
                         .copyWith(fontFamily: AppFont.fontMedium),
@@ -523,8 +507,7 @@ class MedicineAdd extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     ConstString.benefits,
-                    style: Theme
-                        .of(context)
+                    style: Theme.of(context)
                         .textTheme
                         .titleLarge!
                         .copyWith(fontFamily: AppFont.fontMedium),
@@ -563,8 +546,7 @@ class MedicineAdd extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     ConstString.mediDrug,
-                    style: Theme
-                        .of(context)
+                    style: Theme.of(context)
                         .textTheme
                         .titleLarge!
                         .copyWith(fontFamily: AppFont.fontMedium),
@@ -603,8 +585,7 @@ class MedicineAdd extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     ConstString.safety,
-                    style: Theme
-                        .of(context)
+                    style: Theme.of(context)
                         .textTheme
                         .titleLarge!
                         .copyWith(fontFamily: AppFont.fontMedium),
@@ -643,8 +624,7 @@ class MedicineAdd extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     ConstString.prescription,
-                    style: Theme
-                        .of(context)
+                    style: Theme.of(context)
                         .textTheme
                         .titleLarge!
                         .copyWith(fontFamily: AppFont.fontMedium),
@@ -653,8 +633,7 @@ class MedicineAdd extends StatelessWidget {
                 const SizedBox(
                   height: 10,
                 ),
-                Obx(() =>
-                    Align(
+                Obx(() => Align(
                       alignment: Alignment.centerLeft,
                       child: Container(
                         decoration: BoxDecoration(
@@ -699,8 +678,7 @@ class MedicineAdd extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     ConstString.type,
-                    style: Theme
-                        .of(context)
+                    style: Theme.of(context)
                         .textTheme
                         .titleLarge!
                         .copyWith(fontFamily: AppFont.fontMedium),
@@ -711,26 +689,23 @@ class MedicineAdd extends StatelessWidget {
                 ),
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: Obx(() =>
-                      Container(
+                  child: Obx(() => Container(
                         decoration: BoxDecoration(
                             color: AppColors.white,
                             border: Border.all(color: AppColors.lineGrey),
                             borderRadius: BorderRadius.circular(10)),
                         child: DropdownButton(
-                          style: Theme
-                              .of(context)
+                          style: Theme.of(context)
                               .textTheme
                               .titleSmall!
                               .copyWith(fontSize: 15),
                           hint: Text(
                             "Select Discount Type",
-                            style: Theme
-                                .of(context)
+                            style: Theme.of(context)
                                 .textTheme
                                 .titleSmall!
                                 .copyWith(
-                                fontSize: 15, color: AppColors.txtGrey),
+                                    fontSize: 15, color: AppColors.txtGrey),
                           ),
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           icon: Padding(
@@ -748,21 +723,20 @@ class MedicineAdd extends StatelessWidget {
                           },
                           items: controller.typeList.isNotEmpty
                               ? controller.typeList.map((String items) {
-                            return DropdownMenuItem(
-                              value: items,
-                              child: Text(
-                                items,
-                                style: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .titleMedium!
-                                    .copyWith(fontSize: 15),
-                              ),
-                            );
-                          }).toList()
+                                  return DropdownMenuItem(
+                                    value: items,
+                                    child: Text(
+                                      items,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium!
+                                          .copyWith(fontSize: 15),
+                                    ),
+                                  );
+                                }).toList()
                               : null,
                           value: controller.typeList
-                              .contains(controller.type.value)
+                                  .contains(controller.type.value)
                               ? controller.type.value
                               : null,
                         ),
@@ -775,13 +749,11 @@ class MedicineAdd extends StatelessWidget {
                     onPressed: () async {
                       if (controller.validateData()) {
                         showProgressDialogue(context);
-                        String id = controller.medicineRef
-                            .doc()
-                            .id;
+                        String id = controller.medicineRef.doc().id;
 
                         String? imageUrl =
-                        await pickImageController.uploadImageToStorage(
-                            pickImageController.image.value, id);
+                            await pickImageController.uploadImageToStorage(
+                                pickImageController.image.value, id);
 
                         // if (imageUrl == null) return;
 
@@ -791,9 +763,9 @@ class MedicineAdd extends StatelessWidget {
                               genericName: controller.medicineController.text,
                               brandName: controller.brandController.text,
                               description:
-                              controller.descriptionController.text,
+                                  controller.descriptionController.text,
                               medicinePrice:
-                              int.parse(controller.priceController.text),
+                                  int.parse(controller.priceController.text),
                               categoryId: controller.categoryIdController.text,
                               discountId: controller.discountIdController.text,
                               ratings: controller.ratinsController.text,
@@ -801,16 +773,16 @@ class MedicineAdd extends StatelessWidget {
                               uses: controller.usesController.text,
                               about: controller.aboutController.text,
                               directionForUse:
-                              controller.directionUseController.text,
+                                  controller.directionUseController.text,
                               benefits: controller.benefitsController.text,
                               drugDrugInteractions:
-                              controller.drugInterController.text,
+                                  controller.drugInterController.text,
                               safetyInformation:
-                              controller.safetyInfoController.text,
+                                  controller.safetyInfoController.text,
                               prescriptionRequire:
-                              controller.preRequire.value == "Yes"
-                                  ? true
-                                  : false,
+                                  controller.preRequire.value == "Yes"
+                                      ? true
+                                      : false,
                               type: controller.type.value);
                           await controller.storeMedicineData(medicineData);
                           pickImageController.image.value = null;
@@ -820,9 +792,9 @@ class MedicineAdd extends StatelessWidget {
                               genericName: controller.medicineController.text,
                               brandName: controller.brandController.text,
                               description:
-                              controller.descriptionController.text,
+                                  controller.descriptionController.text,
                               medicinePrice:
-                              int.parse(controller.priceController.text),
+                                  int.parse(controller.priceController.text),
                               categoryId: controller.categoryIdController.text,
                               discountId: controller.discountIdController.text,
                               ratings: controller.ratinsController.text,
@@ -830,16 +802,16 @@ class MedicineAdd extends StatelessWidget {
                               uses: controller.usesController.text,
                               about: controller.aboutController.text,
                               directionForUse:
-                              controller.directionUseController.text,
+                                  controller.directionUseController.text,
                               benefits: controller.benefitsController.text,
                               drugDrugInteractions:
-                              controller.drugInterController.text,
+                                  controller.drugInterController.text,
                               safetyInformation:
-                              controller.safetyInfoController.text,
+                                  controller.safetyInfoController.text,
                               prescriptionRequire:
-                              controller.preRequire.value == "Yes"
-                                  ? true
-                                  : false,
+                                  controller.preRequire.value == "Yes"
+                                      ? true
+                                      : false,
                               type: controller.type.value);
                           await controller.updateMedicine(medicineData);
                           pickImageController.image.value = null;
@@ -857,13 +829,9 @@ class MedicineAdd extends StatelessWidget {
                           ? ConstString.addMedicine
                           : ConstString.updateMedicine,
                       style:
-                      Theme
-                          .of(context)
-                          .textTheme
-                          .displayMedium!
-                          .copyWith(
-                        color: Colors.white,
-                      ),
+                          Theme.of(context).textTheme.displayMedium!.copyWith(
+                                color: Colors.white,
+                              ),
                     ))
               ],
             ),

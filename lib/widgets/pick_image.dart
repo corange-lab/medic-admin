@@ -23,6 +23,7 @@ final ImagePicker _picker = ImagePicker();
 class PickImageController extends GetxController {
   Rx<XFile?> image = Rx<XFile?>(null);
   Rx<XFile?> categoryImage = Rx<XFile?>(null);
+  RxString imageDataUrl = "".obs;
 
   Future<XFile?> pickImage() async {
     return await _picker.pickImage(source: ImageSource.gallery);

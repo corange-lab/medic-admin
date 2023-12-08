@@ -14,10 +14,9 @@ import 'package:medic_admin/utils/string.dart';
 import 'package:medic_admin/widgets/app_dialogue.dart';
 
 class ViewCategory extends StatelessWidget {
-
   Function()? onPressedMenu;
 
-  ViewCategory({super.key,this.onPressedMenu});
+  ViewCategory({super.key, this.onPressedMenu});
 
   @override
   Widget build(BuildContext context) {

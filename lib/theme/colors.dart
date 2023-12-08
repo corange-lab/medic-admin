@@ -25,6 +25,7 @@ class AppColors {
   static Color tilePrimaryColor = const Color(0xffF0FDFA);
 
   static Color darkPrimaryColor = const Color(0xff292929);
+  static Color dark = const Color(0xff474747);
   static Color lightGrey = const Color(0xff818181);
   static Color white = const Color(0xffffffff);
   static Color txtGrey = const Color(0xff656565);

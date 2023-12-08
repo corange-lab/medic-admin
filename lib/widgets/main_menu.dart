@@ -52,6 +52,11 @@ class MainMenu extends StatelessWidget {
           label: "Discount",
         ),
         SelectionButtonData(
+          activeIcon: Icons.supervised_user_circle,
+          icon: Icons.supervised_user_circle_outlined,
+          label: "User List",
+        ),
+        SelectionButtonData(
           activeIcon: Icons.logout,
           icon: Icons.logout,
           label: "Log Out",

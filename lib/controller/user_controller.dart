@@ -12,7 +12,7 @@ class UserController extends GetxController {
   User? get firebaseUser => FirebaseAuth.instance.currentUser;
 
   final CollectionReference _usersCollection =
-  FirebaseFirestore.instance.collection('users');
+      FirebaseFirestore.instance.collection('users');
 
   // current logged in user detail from users collection from firestore database
   Rx<UserModel?> loggedInUser = UserModel.newUser().obs;
@@ -64,5 +64,21 @@ class UserController extends GetxController {
       return UserModel.fromMap(
           documentSnapshot.data()! as Map<String, dynamic>);
     });
+  }
+
+//   Future<List<UserModel>> fetchUsers() async {
+//     QuerySnapshot snapshot =
+//         await FirebaseFirestore.instance.collection('users').get();
+//     return snapshot.docs
+//         .map((doc) => UserModel.fromMap(doc.data() as Map<String, dynamic>))
+//         .toList();
+//   }
+
+  Future<List<UserModel>> fetchUserList() async {
+    QuerySnapshot snapshot =
+        await FirebaseFirestore.instance.collection('users').get();
+    return snapshot.docs
+        .map((doc) => UserModel.fromMap(doc.data() as Map<String, dynamic>))
+        .toList();
   }
 }
